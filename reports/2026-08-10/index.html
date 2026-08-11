@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>数字孪生视觉设计日报 · Digital Twin Visual Design Report</title>
+<style>
+  :root {
+    --bg: #05070d;
+    --bg-2: #0a1020;
+    --panel: rgba(16, 26, 46, 0.72);
+    --border: rgba(90, 180, 255, 0.18);
+    --border-strong: rgba(120, 220, 255, 0.55);
+    --text: #d7e3f4;
+    --text-dim: #8ea3c2;
+    --text-mute: #5d7091;
+    --accent: #4dd0ff;
+    --accent-2: #7f5cff;
+    --accent-3: #29ffb6;
+    --warn: #ffb547;
+    --danger: #ff5f7a;
+    --mono: 'JetBrains Mono', 'SF Mono', 'Consolas', 'Menlo', monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                 "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    line-height: 1.65;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background:
+      radial-gradient(ellipse 1200px 800px at 10% -10%, rgba(77, 208, 255, 0.18), transparent 60%),
+      radial-gradient(ellipse 900px 600px at 100% 20%, rgba(127, 92, 255, 0.16), transparent 60%),
+      radial-gradient(ellipse 1000px 700px at 50% 120%, rgba(41, 255, 182, 0.08), transparent 60%),
+      linear-gradient(180deg, #05070d 0%, #06091a 100%);
+    min-height: 100vh;
+  }
+
+  /* subtle grid overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(90, 180, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(90, 180, 255, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 48px 24px 96px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ============ HEADER ============ */
+  header.hero {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 32px;
+    background:
+      linear-gradient(135deg, rgba(77, 208, 255, 0.08), rgba(127, 92, 255, 0.06)),
+      var(--panel);
+    backdrop-filter: blur(8px);
+    position: relative;
+    overflow: hidden;
+  }
+  header.hero::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    background: radial-gradient(circle, rgba(77, 208, 255, 0.25), transparent 70%);
+    filter: blur(20px);
+  }
+  .tag-row {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+  }
+  .tag-row .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent-3);
+    box-shadow: 0 0 12px var(--accent-3);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .tag-row .sep { color: var(--text-mute); }
+  h1.title {
+    font-size: 32px;
+    margin: 0 0 10px;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #ffffff 0%, #7fdcff 60%, #b8a5ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 700;
+  }
+  .subtitle {
+    font-size: 15px;
+    color: var(--text-dim);
+    margin: 0 0 20px;
+    max-width: 640px;
+  }
+  .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 22px;
+  }
+  .meta-cell {
+    padding: 12px 14px;
+    background: rgba(10, 20, 40, 0.5);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .meta-cell .k {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-mute);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .meta-cell .v {
+    font-size: 18px;
+    color: var(--text);
+    font-weight: 600;
+    margin-top: 2px;
+  }
+  .meta-cell .v .unit {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-left: 4px;
+    font-weight: 400;
+  }
+
+  /* ============ NAV / TOC ============ */
+  nav.toc {
+    margin: 32px 0 40px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    background: var(--panel);
+    backdrop-filter: blur(8px);
+  }
+  nav.toc h2 {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0 0 14px;
+    font-weight: 500;
+  }
+  nav.toc ol {
+    list-style: none; padding: 0; margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px 20px;
+    counter-reset: nav-counter;
+  }
+  nav.toc li {
+    counter-increment: nav-counter;
+    display: flex; align-items: baseline;
+    gap: 10px;
+    padding: 6px 0;
+    font-size: 14px;
+    border-bottom: 1px dashed rgba(90, 180, 255, 0.08);
+  }
+  nav.toc li::before {
+    content: counter(nav-counter, decimal-leading-zero);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-mute);
+    flex-shrink: 0;
+  }
+  nav.toc a {
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  nav.toc a:hover { color: var(--accent); }
+
+  /* ============ ITEMS ============ */
+  .item {
+    margin: 40px 0;
+    padding: 28px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    backdrop-filter: blur(8px);
+    transition: border-color 0.2s, transform 0.2s;
+    position: relative;
+  }
+  .item:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-2px);
+  }
+  .item-head {
+    display: flex; align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+  .item-num {
+    font-family: var(--mono);
+    font-size: 34px;
+    line-height: 1;
+    color: var(--accent);
+    font-weight: 700;
+    flex-shrink: 0;
+    text-shadow: 0 0 20px rgba(77, 208, 255, 0.4);
+  }
+  .item-head-body { flex: 1; }
+  .item h3 {
+    font-size: 20px;
+    margin: 0 0 6px;
+    color: #ffffff;
+    letter-spacing: -0.2px;
+  }
+  .item .item-en {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-mute);
+    letter-spacing: 0.5px;
+  }
+  .badges {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+    background: rgba(77, 208, 255, 0.1);
+    border: 1px solid rgba(77, 208, 255, 0.25);
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .badge.purple { background: rgba(127, 92, 255, 0.1); border-color: rgba(127, 92, 255, 0.3); color: #b8a5ff; }
+  .badge.green  { background: rgba(41, 255, 182, 0.08); border-color: rgba(41, 255, 182, 0.28); color: var(--accent-3); }
+  .badge.warn   { background: rgba(255, 181, 71, 0.08); border-color: rgba(255, 181, 71, 0.3);  color: var(--warn); }
+
+  .item p { margin: 10px 0; color: var(--text-dim); }
+  .item p strong { color: var(--text); font-weight: 600; }
+
+  .visual {
+    margin: 20px 0 4px;
+    height: 240px;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    background: #050914;
+    border: 1px solid var(--border);
+  }
+  .visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+  .item:hover .visual img { transform: scale(1.02); }
+  .visual::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 60%, rgba(5, 9, 20, 0.85) 100%);
+    pointer-events: none;
+  }
+
+  /* Visual variants — CSS-only illustrations */
+  .v-city {
+    background:
+      linear-gradient(180deg, transparent 40%, rgba(77, 208, 255, 0.15) 60%, rgba(77, 208, 255, 0.4) 100%),
+      repeating-linear-gradient(90deg, rgba(77, 208, 255, 0.4) 0 2px, transparent 2px 40px),
+      repeating-linear-gradient(0deg, rgba(77, 208, 255, 0.15) 0 1px, transparent 1px 30px),
+      radial-gradient(ellipse at 50% 100%, rgba(77, 208, 255, 0.4), transparent 60%);
+  }
+  .v-city::before {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 65%;
+    background:
+      linear-gradient(90deg,
+        transparent 4%, #0a1832 4% 8%, transparent 8% 10%,
+        #12224a 10% 16%, transparent 16% 20%,
+        #0a1832 20% 25%, transparent 25% 28%,
+        #14285a 28% 34%, transparent 34% 38%,
+        #0a1832 38% 46%, transparent 46% 50%,
+        #14285a 50% 58%, transparent 58% 62%,
+        #0a1832 62% 68%, transparent 68% 72%,
+        #12224a 72% 80%, transparent 80% 84%,
+        #0a1832 84% 92%, transparent 92% 96%
+      );
+    clip-path: polygon(
+      0 100%, 0 60%, 4% 60%, 4% 20%, 8% 20%, 8% 60%,
+      10% 60%, 10% 40%, 16% 40%, 16% 60%,
+      20% 60%, 20% 10%, 25% 10%, 25% 60%,
+      28% 60%, 28% 30%, 34% 30%, 34% 60%,
+      38% 60%, 38% 45%, 46% 45%, 46% 60%,
+      50% 60%, 50% 15%, 58% 15%, 58% 60%,
+      62% 60%, 62% 35%, 68% 35%, 68% 60%,
+      72% 60%, 72% 25%, 80% 25%, 80% 60%,
+      84% 60%, 84% 50%, 92% 50%, 92% 60%,
+      96% 60%, 96% 30%, 100% 30%, 100% 100%
+    );
+  }
+  .v-city::after {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(77, 208, 255, 0.4), transparent 3%),
+      radial-gradient(circle at 55% 20%, rgba(255, 181, 71, 0.6), transparent 2%),
+      radial-gradient(circle at 78% 40%, rgba(41, 255, 182, 0.5), transparent 3%);
+  }
+
+  .v-factory {
+    background:
+      radial-gradient(ellipse at 50% 100%, rgba(127, 92, 255, 0.35), transparent 60%),
+      linear-gradient(180deg, #0a0f22, #050914);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .v-factory::before {
+    content: '';
+    width: 100%; height: 60%;
+    background:
+      linear-gradient(90deg,
+        transparent 0 10%, rgba(127, 92, 255, 0.35) 10% 12%,
+        transparent 12% 30%, rgba(127, 92, 255, 0.25) 30% 32%,
+        transparent 32% 55%, rgba(127, 92, 255, 0.4) 55% 57%,
+        transparent 57% 78%, rgba(127, 92, 255, 0.3) 78% 80%, transparent 80%),
+      repeating-linear-gradient(-30deg, rgba(127, 92, 255, 0.06) 0 1px, transparent 1px 12px);
+    position: absolute; bottom: 0;
+  }
+  .v-factory::after {
+    content: '⬢ ⬡ ⬢ ⬡ ⬢ ⬡ ⬢ ⬡';
+    font-family: var(--mono);
+    color: rgba(127, 92, 255, 0.55);
+    font-size: 22px;
+    letter-spacing: 12px;
+    position: absolute;
+    top: 30%;
+    animation: drift 12s linear infinite;
+  }
+  @keyframes drift {
+    from { transform: translateX(-10%); }
+    to   { transform: translateX(10%); }
+  }
+
+  .v-grid {
+    background:
+      linear-gradient(180deg, rgba(41, 255, 182, 0.06), transparent 70%),
+      repeating-linear-gradient(0deg, rgba(41, 255, 182, 0.14) 0 1px, transparent 1px 20px),
+      repeating-linear-gradient(90deg, rgba(41, 255, 182, 0.14) 0 1px, transparent 1px 20px),
+      #050914;
+    perspective: 400px;
+  }
+  .v-grid::before {
+    content: '';
+    position: absolute; inset: 30% 10% 10%;
+    background:
+      repeating-linear-gradient(90deg, rgba(41, 255, 182, 0.4) 0 1px, transparent 1px 18px),
+      repeating-linear-gradient(0deg, rgba(41, 255, 182, 0.4) 0 1px, transparent 1px 18px);
+    transform: rotateX(60deg);
+    transform-origin: bottom;
+    mask-image: linear-gradient(180deg, transparent, black 40%, black);
+  }
+  .v-grid::after {
+    content: '⚡ 220kV · 12 SUBSTATIONS · ONLINE';
+    position: absolute; top: 12px; left: 16px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent-3);
+    letter-spacing: 1px;
+    text-shadow: 0 0 8px rgba(41, 255, 182, 0.6);
+  }
+
+  .v-hmi {
+    background:
+      radial-gradient(circle at 70% 40%, rgba(77, 208, 255, 0.25), transparent 50%),
+      linear-gradient(135deg, #0a1020, #05070d);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    padding: 14px;
+  }
+  .v-hmi > div {
+    background: rgba(77, 208, 255, 0.06);
+    border: 1px solid rgba(77, 208, 255, 0.2);
+    border-radius: 6px;
+    position: relative;
+  }
+  .v-hmi > div::before {
+    content: '';
+    position: absolute; inset: 8px;
+    background: repeating-linear-gradient(90deg,
+      var(--accent) 0 20%, transparent 20% 25%,
+      var(--accent-2) 25% 45%, transparent 45% 55%,
+      var(--accent-3) 55% 80%, transparent 80%);
+    opacity: 0.35;
+    border-radius: 3px;
+    height: 6px;
+    top: auto;
+    bottom: 12px;
+  }
+  .v-hmi > div:nth-child(1)::after,
+  .v-hmi > div:nth-child(2)::after,
+  .v-hmi > div:nth-child(3)::after {
+    position: absolute; top: 10px; left: 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+  }
+  .v-hmi > div:nth-child(1)::after { content: 'CPU 42%'; }
+  .v-hmi > div:nth-child(2)::after { content: 'IO 88%'; }
+  .v-hmi > div:nth-child(3)::after { content: 'NET 65%'; }
+
+  .v-globe {
+    background:
+      radial-gradient(circle at 50% 50%, rgba(77, 208, 255, 0.25) 0 30%, transparent 32%),
+      radial-gradient(circle at 50% 50%, transparent 30%, rgba(77, 208, 255, 0.08) 30% 45%, transparent 45%),
+      radial-gradient(ellipse at 50% 50%, transparent 45%, rgba(77, 208, 255, 0.04) 45% 60%, transparent 60%),
+      linear-gradient(180deg, #050914, #08111f);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .v-globe::before {
+    content: '';
+    width: 130px; height: 130px;
+    border-radius: 50%;
+    border: 1px solid rgba(77, 208, 255, 0.4);
+    background:
+      repeating-linear-gradient(0deg, transparent 0 12px, rgba(77, 208, 255, 0.14) 12px 13px),
+      repeating-linear-gradient(90deg, transparent 0 12px, rgba(77, 208, 255, 0.14) 12px 13px),
+      radial-gradient(circle at 30% 40%, rgba(41, 255, 182, 0.35), transparent 40%);
+    box-shadow: 0 0 40px rgba(77, 208, 255, 0.4), inset 0 0 30px rgba(0, 0, 0, 0.5);
+    animation: spin 30s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .v-particles {
+    background: radial-gradient(ellipse at 50% 50%, rgba(127, 92, 255, 0.2), transparent 60%), #05070d;
+    overflow: hidden;
+  }
+  .v-particles::before,
+  .v-particles::after {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 10% 20%, var(--accent) 1px, transparent 2px),
+      radial-gradient(circle at 30% 60%, var(--accent-2) 1px, transparent 2px),
+      radial-gradient(circle at 50% 30%, var(--accent-3) 1px, transparent 2px),
+      radial-gradient(circle at 70% 70%, var(--accent) 1px, transparent 2px),
+      radial-gradient(circle at 85% 25%, var(--accent-2) 1px, transparent 2px),
+      radial-gradient(circle at 20% 80%, var(--accent-3) 1px, transparent 2px),
+      radial-gradient(circle at 60% 45%, var(--accent) 1.5px, transparent 3px);
+    background-size: 300px 200px;
+  }
+  .v-particles::after {
+    animation: floaty 10s ease-in-out infinite alternate;
+    opacity: 0.7;
+  }
+  @keyframes floaty {
+    from { transform: translate(0, 0); }
+    to { transform: translate(-40px, 20px); }
+  }
+
+  .v-traffic {
+    background: linear-gradient(180deg, #0a1020, #050914);
+    overflow: hidden;
+  }
+  .v-traffic::before {
+    content: '';
+    position: absolute; inset: 20px;
+    background:
+      linear-gradient(90deg, transparent 0 30%, var(--accent) 30% 30.5%, transparent 30.5% 65%, var(--warn) 65% 65.5%, transparent 65.5%),
+      linear-gradient(0deg, transparent 0 40%, var(--accent-3) 40% 40.5%, transparent 40.5% 75%, var(--danger) 75% 75.5%, transparent 75.5%);
+    filter: blur(0.5px);
+    box-shadow: 0 0 30px rgba(77, 208, 255, 0.3);
+  }
+  .v-traffic::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle, var(--accent) 2px, transparent 3px),
+      radial-gradient(circle, var(--warn) 2px, transparent 3px),
+      radial-gradient(circle, var(--accent-3) 2px, transparent 3px);
+    background-size: 60px 60px, 80px 80px, 100px 100px;
+    background-position: 20px 20px, 40px 60px, 80px 30px;
+    animation: floaty 8s ease-in-out infinite alternate;
+    opacity: 0.8;
+  }
+
+  .v-components {
+    background:
+      linear-gradient(135deg, rgba(255, 181, 71, 0.08), transparent 50%),
+      linear-gradient(180deg, #0a1020, #050914);
+    padding: 14px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 6px;
+  }
+  .v-components > span {
+    background: rgba(77, 208, 255, 0.05);
+    border: 1px solid rgba(77, 208, 255, 0.18);
+    border-radius: 3px;
+  }
+  .v-components > span:nth-child(3n)    { background: rgba(127, 92, 255, 0.08); border-color: rgba(127, 92, 255, 0.28); }
+  .v-components > span:nth-child(5n)    { background: rgba(41, 255, 182, 0.06); border-color: rgba(41, 255, 182, 0.25); }
+  .v-components > span:nth-child(7n)    { background: rgba(255, 181, 71, 0.06); border-color: rgba(255, 181, 71, 0.25); }
+
+  .v-blueprint {
+    background:
+      repeating-linear-gradient(45deg, transparent 0 10px, rgba(77, 208, 255, 0.04) 10px 11px),
+      linear-gradient(180deg, #071429, #050914);
+  }
+  .v-blueprint::before {
+    content: '';
+    position: absolute; inset: 20px;
+    border: 1px dashed rgba(77, 208, 255, 0.35);
+    border-radius: 6px;
+  }
+  .v-blueprint::after {
+    content: 'BIM · GIS · IoT · CIM';
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--mono);
+    color: var(--accent);
+    font-size: 16px;
+    letter-spacing: 3px;
+    text-shadow: 0 0 12px rgba(77, 208, 255, 0.6);
+  }
+
+  /* Source line */
+  .sources {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px dashed rgba(90, 180, 255, 0.15);
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-mute);
+  }
+  .sources a {
+    color: var(--text-dim);
+    text-decoration: none;
+    border-bottom: 1px dotted rgba(142, 163, 194, 0.35);
+    margin-right: 12px;
+  }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* Key points */
+  .keypoints {
+    margin: 14px 0;
+    padding: 14px 18px;
+    background: rgba(10, 20, 40, 0.5);
+    border-left: 2px solid var(--accent);
+    border-radius: 4px;
+  }
+  .keypoints ul { margin: 0; padding-left: 18px; }
+  .keypoints li { color: var(--text-dim); margin: 4px 0; }
+  .keypoints li::marker { color: var(--accent); }
+
+  /* Footer */
+  footer {
+    margin-top: 60px;
+    padding: 30px 0;
+    text-align: center;
+    color: var(--text-mute);
+    font-family: var(--mono);
+    font-size: 12px;
+    border-top: 1px dashed rgba(90, 180, 255, 0.12);
+  }
+  footer .glow {
+    color: var(--accent);
+    text-shadow: 0 0 8px rgba(77, 208, 255, 0.4);
+  }
+
+  /* Responsive */
+  @media (max-width: 720px) {
+    .wrap { padding: 24px 16px 60px; }
+    h1.title { font-size: 24px; }
+    .meta-grid { grid-template-columns: repeat(2, 1fr); }
+    nav.toc ol { grid-template-columns: 1fr; }
+    .item { padding: 20px; }
+    .item-num { font-size: 26px; }
+    .item h3 { font-size: 17px; }
+    .visual { height: 140px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="tag-row">
+      <span class="dot"></span>
+      <span>ISSUE · 001</span>
+      <span class="sep">/</span>
+      <span>2026-08-10</span>
+      <span class="sep">/</span>
+      <span>DIGITAL TWIN · VISUAL DESIGN</span>
+    </div>
+    <h1 class="title">数字孪生视觉设计日报</h1>
+    <p class="subtitle">
+      面向 CIM 底座、工业孪生、智慧大屏与 HMI 沉浸式可视化的最新趋势、代表案例与设计方法论。
+      本日报聚焦"看得见、看得懂、看得美"的视觉表达，也关注支撑这一切的渲染性能与协同工作流。
+    </p>
+    <div class="meta-grid">
+      <div class="meta-cell">
+        <div class="k">Topics</div>
+        <div class="v">10<span class="unit">条目</span></div>
+      </div>
+      <div class="meta-cell">
+        <div class="k">Trends</div>
+        <div class="v">6<span class="unit">大方向</span></div>
+      </div>
+      <div class="meta-cell">
+        <div class="k">Cases</div>
+        <div class="v">8<span class="unit">项目案例</span></div>
+      </div>
+      <div class="meta-cell">
+        <div class="k">Sources</div>
+        <div class="v">15+<span class="unit">信源</span></div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <h2>▍ Table of Contents</h2>
+    <ol>
+      <li><a href="#item-1">2026 视觉主基调：从"炫技"到"叙事"</a></li>
+      <li><a href="#item-2">城市数字孪生：CIM 底座的一屏统览</a></li>
+      <li><a href="#item-3">工厂数字孪生：从复刻到操控闭环</a></li>
+      <li><a href="#item-4">HMI × 数字孪生：沉浸式实时可视化</a></li>
+      <li><a href="#item-5">大屏设计方法论：主次辅与信息焦点</a></li>
+      <li><a href="#item-6">质感与动效：让画面"活"起来</a></li>
+      <li><a href="#item-7">智慧交通仪表盘：Cebu Metro 案例</a></li>
+      <li><a href="#item-8">3D 城市模型：欧洲市政孪生实践</a></li>
+      <li><a href="#item-9">组件生态：低代码大屏与素材库</a></li>
+      <li><a href="#item-10">性能底盘：LOD · 云渲染 · 流式加载</a></li>
+    </ol>
+  </nav>
+
+  <!-- Item 1 -->
+  <section class="item" id="item-1">
+    <div class="item-head">
+      <div class="item-num">01</div>
+      <div class="item-head-body">
+        <h3>2026 视觉主基调：从"炫技"到"叙事"</h3>
+        <div class="item-en">Signature Clarity · Purposeful Motion · AI-in-Sidebar</div>
+        <div class="badges">
+          <span class="badge">TREND</span>
+          <span class="badge purple">UI 2026</span>
+          <span class="badge green">Essentialism</span>
+        </div>
+      </div>
+    </div>
+    <div class="visual"><img src="images/dt-01.png" alt="2026 数字孪生 UI 设计趋势" loading="lazy" /></div>
+    <p>
+      Tubik、Growth UX Studio、Acme Minds 等团队在 2026 展望中不约而同强调：
+      <strong>数字孪生的视觉设计正在离开"玻璃拟态 + 霓虹发光"的装饰化阶段</strong>，
+      转向<strong>"结构清晰 + 有意图动效 + AI 作为侧边协作者"</strong>的骨架式表达。
+    </p>
+    <div class="keypoints">
+      <ul>
+        <li><strong>Purposeful Motion</strong>：动效必须解释状态，而不是取悦眼球。</li>
+        <li><strong>Signature Clarity</strong>：等宽字体、网格作为前景、"线框感"回归主 UI。</li>
+        <li><strong>AI in the sidebar</strong>：AI 助手不再抢占主流，回到覆盖面板与侧栏。</li>
+        <li><strong>Essentialism</strong>：整屏叙事式布局在工业与城市大屏中开始流行。</li>
+      </ul>
+    </div>
+    <div class="sources">
+      SOURCE ·
+      <a href="https://www.linkedin.com/pulse/whats-next-7-ui-design-trends-2026-tubik-dd82f" target="_blank" rel="noopener">Tubik · 7 UI Trends 2026</a>
+      <a href="https://thegrowthuxstudio.com/ui-ux-design-trends-that-will-redefine-digital-products-in-2026" target="_blank" rel="noopener">Growth UX Studio</a>
+    </div>
+  </section>
+
+  <!-- Item 2 -->
+  <section class="item" id="item-2">
+    <div class="item-head">
+      <div class="item-num">02</div>
+      <div class="item-head-body">
+        <h3>城市数字孪生：CIM 底座的"一屏统览"</h3>
+        <div class="item-en">Frontop · 连云港城市之窗 / 伏锂码云平台</div>
+        <div class="badges">
+          <span class="badge">CASE</span>
+          <span class="badge purple">CIM</span>
+          <span class="badge green">Smart City</span>
+        </div>
+      </div>
+    </div>
+    <div class="visual"><img src="images/dt-02.png" alt="城市数字孪生 · CIM 一屏统览" loading="lazy" /></div>
+    <p>
+      凡拓数创（Frontop）为连云港打造的"城市之窗"以<strong>超大尺寸 LED 大屏 + FT-E 引擎</strong>
+      呈现政务、经济、民生舆情三大态势；伏锂码云平台则把 <strong>倾斜摄影 + BIM + GIS + IoT</strong>
+      融合进统一的城市信息模型（CIM），实现地下管网到城市天际线的可计算三维底座。
+    </p>
+    <div class="keypoints">
+      <ul>
+        <li>视觉：深蓝主色 + 冷调发光线框，突出"看得见的城市脉搏"。</li>
+        <li>结构：多屏联动、BOX 沉浸式环幕 + AR 推拉屏三段式体验。</li>
+        <li>关键跨越：从"数字沙盘"→"映射真实、透视现状、模拟未来"的闭环。</li>
+      </ul>
+    </div>
+    <div class="sources">
+      SOURCE ·
+      <a href="https://www.frontop.cn/service-support/cases/data_86.html" target="_blank" rel="noopener">凡拓 · 智慧城市案例</a>
+      <a href="https://www.fulima.com/poly/poly-detail-9988.htm" target="_blank" rel="noopener">伏锂码云平台</a>
+    </div>
+  </section>
+
+  <!-- Item 3 -->
+  <section class="item" id="item-3">
+    <div class="item-head">
+      <div class="item-num">03</div>
+      <div class="item-head-body">
+        <h3>工厂数字孪生：从"复刻"到"操控闭环"</h3>
+        <div class="item-en">EasyV · 山海鲸 · 智慧汽车工厂 / 智慧机房</div>
+        <div class="badges">
+          <span class="badge">CASE</span>
+          <span class="badge purple">Industry</span>
+          <span class="badge warn">Cyber Style</span>
+        </div>
+      </div>
+    </div>
+    <div class="visual"><img src="images/dt-03.png" alt="工厂数字孪生 · 操控闭环" loading="lazy" /></div>
+    <p>
+      易知微 EasyV 的<strong>智慧汽车工厂</strong>项目接入 IOT 感知、工业监测、GIS 和 BIM 数据，
+      提供 B/S 与 C/S 双模式的<strong>场景虚拟还原 + 实时监控 + 双向控制</strong>；
+      山海鲸的"工厂运营驾驶舱"则以淡紫科技风为基调，把 <strong>3D 模型置于主视觉、数据挪至右侧栏</strong>，
+      是当下"少即是多"叙事式大屏的典型体现。
+    </p>
+    <div class="keypoints">
+      <ul>
+        <li>色相：紫蓝系降低视觉疲劳，热力/告警用暖色打断节奏。</li>
+        <li>核心变化：孪生体不再是"看的"，而是"能反向下发指令"的操作台。</li>
+        <li>视觉细节：网格地面、辉光边线、扫描线动效——克制且服务于业务。</li>
+      </ul>
+    </div>
+    <div class="sources">
+      SOURCE ·
+      <a href="https://easyv.cloud" target="_blank" rel="noopener">EasyV 易知微</a>
+      <a href="https://www.shanhaibi.com" target="_blank" rel="noopener">山海鲸可视化</a>
+    </div>
+  </section>
+
+  <!-- Item 4 -->
+  <section class="item" id="item-4">
+    <div class="item-head">
+      <div class="item-num">04</div>
+      <div class="item-head-body">
+        <h3>HMI × 数字孪生：沉浸式实时可视化</h3>
+        <div class="item-en">UXDivers · Top HMI Trends to Watch in 2026</div>
+        <div class="badges">
+          <span class="badge">TREND</span>
+          <span class="badge green">HMI</span>
+          <span class="badge purple">Multi-modal</span>
+        </div>
+      </div>
+    </div>
+    <div class="visual"><img src="images/dt-04.png" alt="HMI 沉浸式实时可视化" loading="lazy" /></div>
+    <p>
+      UXDivers 提出：2026 的 HMI 已经从"仪表盘上的一块屏"演化为
+      <strong>触觉反馈 + 手势 + 语音 + 数字孪生的多模态协作层</strong>。
+      工业与汽车领域的重点是 <em>Digital Twin expansion</em>——机器内部状态被实时以 3D 呈现，
+      操作员可以边"看边听边摸"完成故障定位。
+    </p>
+    <div class="keypoints">
+      <ul>
+        <li>核心目标：降低"认知负荷"——用户无需离开主视场即可操作。</li>
+        <li>视觉手法：分区状态色 + 微光呼吸 + 极简文字，避免屏幕过载。</li>
+        <li>底层能力：Zero-Trust 安全 + 边缘 AI Agent 内嵌到界面响应链。</li>
+      </ul>
+    </div>
+    <div class="sources">
+      SOURCE ·
+      <a href="https://uxdivers.com/zh/blog/top-hmi-trends-2026" target="_blank" rel="noopener">UXDivers · HMI Trends 2026</a>
+    </div>
+  </section>
+
+  <!-- Item 5 -->
+  <section class="item" id="item-5">
+    <div class="item-head">
+      <div class="item-num">05</div>
+      <div class="item-head-body">
+        <h3>大屏设计方法论：主次辅与信息焦点</h3>
+        <div class="item-en">Hightopo · 设计流程与业务指标拆解</div>
+        <div class="badges">
+          <span class="badge">METHOD</span>
+          <span class="badge purple">Process</span>
+        </div>
+      </div>
+    </div>
+    <div class="visual"><img src="images/dt-05.png" alt="大屏设计方法论蓝图" loading="lazy" /></div>
+    <p>
+      图扑（Hightopo）在其大屏设计博客中，把方法论拆成两步：
+      <strong>先"理解数据"，再"分层展示"</strong>。数据先分类为
+      分类数据 / 时序数据 / 空间数据 / 仿真孪生四类，再按"主/次/辅"三级把指标写进布局。
+    </p>
+    <div class="keypoints">
+      <ul>
+        <li>四问法：拥有什么数据 → 想知道什么 → 用哪种可视化 → 看到了什么？</li>
+        <li>布局原则：先抛核心，再分级下钻；避免观者迷失于信息海。</li>
+        <li>评审 5 项：布局适配 / 数据客观 / 风格一致 / 可开发 / 无色差拉伸。</li>
+      </ul>
+    </div>
+    <div class="sources">
+      SOURCE ·
+      <a href="https://www.hightopo.com/blog/4678.html" target="_blank" rel="noopener">图扑 · 高质量可视化大屏设计</a>
+    </div>
+  </section>
+
+  <!-- Item 6 -->
+  <section class="item" id="item-6">
+    <div class="item-head">
+      <div class="item-num">06</div>
+      <div class="item-head-body">
+        <h3>质感与动效：让画面"活"起来</h3>
+        <div class="item-en">Materials · Motion · Particles · Volumetric Cloud</div>
+        <div class="badges">
+          <span class="badge">CRAFT</span>
+          <span class="badge warn">Cinematic</span>
+        </div>
+      </div>
+    </div>
+    <div class="visual"><img src="images/dt-06.png" alt="质感与动效 · 电影级 3D 场景" loading="lazy" /></div>
+    <p>
+      质感（金属 / 玻璃 / 晶体 / 光效）与动效（关键帧 / 粒子 / 天气 / 水波纹）
+      是当前工业孪生 3D 场景拉开差距的关键。图扑的 HT 引擎、山海鲸内置的
+      <strong>大气散射 · 体积云 · 高度雾</strong>都已默认整合，一键提升视觉层次。
+    </p>
+    <div class="keypoints">
+      <ul>
+        <li>用材质：一屏只主打一种"英雄材质"，避免视觉混杂。</li>
+        <li>用动效：动效为状态服务——加载 / 变更 / 告警 / 心跳。</li>
+        <li>用光效：辉光集中在关键指标与交互点，其余保持"暗场"。</li>
+      </ul>
+    </div>
+    <div class="sources">
+      SOURCE ·
+      <a href="https://www.hightopo.com/blog/4678.html" target="_blank" rel="noopener">Hightopo Blog</a>
+      <a href="https://www.shanhaibi.com" target="_blank" rel="noopener">山海鲸 · Cesium 视觉整合</a>
+    </div>
+  </section>
+
+  <!-- Item 7 -->
+  <section class="item" id="item-7">
+    <div class="item-head">
+      <div class="item-num">07</div>
+      <div class="item-head-body">
+        <h3>智慧交通仪表盘：Cebu Metro 案例</h3>
+        <div class="item-en">Politecnico di Torino · Digital Twin Dashboard</div>
+        <div class="badges">
+          <span class="badge">CASE</span>
+          <span class="badge green">Traffic</span>
+          <span class="badge">Research</span>
+        </div>
+      </div>
+    </div>
+    <div class="visual"><img src="images/dt-07.png" alt="智慧交通仪表盘" loading="lazy" /></div>
+    <p>
+      都灵理工的这篇论文把<strong>宏观 / 微观交通分析 + 交互驾驶模拟器 + 数字孪生仪表盘</strong>
+      串起来，用来优化 Cebu Metro 的通勤枢纽选址。视觉层面它给出了一个通用范式：
+      3D 场景铺底 + 实时数据流叠加 + 决策操作条。
+    </p>
+    <div class="keypoints">
+      <ul>
+        <li>3D 场景与 GIS 数据同源，管理者可"缩放到街道级"复核决策。</li>
+        <li>把仪表盘视为"决策代理"而非"报表页"——CMC 论文也持同样观点。</li>
+        <li>红/黄/绿三色系可以直接对应"拥堵 / 警戒 / 通畅"的语义色标。</li>
+      </ul>
+    </div>
+    <div class="sources">
+      SOURCE ·
+      <a href="https://webthesis.biblio.polito.it/20216/1/tesi.pdf" target="_blank" rel="noopener">POLITO Thesis · Cebu Metro</a>
+      <a href="https://www.techscience.com/cmc/v86n1/64486/html" target="_blank" rel="noopener">CMC · Hybrid AI-IoT DT</a>
+    </div>
+  </section>
+
+  <!-- Item 8 -->
+  <section class="item" id="item-8">
+    <div class="item-head">
+      <div class="item-num">08</div>
+      <div class="item-head-body">
+        <h3>3D 城市模型：欧洲市政孪生实践</h3>
+        <div class="item-en">VC Systems · Bremen · Helsinki · Wiesbaden</div>
+        <div class="badges">
+          <span class="badge">CASE</span>
+          <span class="badge purple">Urban</span>
+          <span class="badge">EU</span>
+        </div>
+      </div>
+    </div>
+    <div class="visual"><img src="images/dt-08.png" alt="欧洲 3D 城市模型" loading="lazy" /></div>
+    <p>
+      对比国内偏"炫技型"路线，欧洲的城市孪生（Bremen 用 VC Planner、Helsinki 走自动化、Wiesbaden 走
+      热能规划）视觉更"冷静克制"——<strong>白灰底 + 单色高亮 + 语义标签</strong>。
+      设计目标不是震撼观感，而是让规划师、GIS 专家和市政 IT 团队都能"读懂"。
+    </p>
+    <div class="keypoints">
+      <ul>
+        <li>色板：低饱和度 + 强对比度重点色，方便在会议室大屏辨识。</li>
+        <li>信息层次：以"可选图层 + 语义卡片"替代整屏堆叠指标。</li>
+        <li>设计价值观：规划成果的可传达性 > 视觉冲击。</li>
+      </ul>
+    </div>
+    <div class="sources">
+      SOURCE ·
+      <a href="https://vc.systems/en/case-studies" target="_blank" rel="noopener">VC Systems · Case Studies</a>
+    </div>
+  </section>
+
+  <!-- Item 9 -->
+  <section class="item" id="item-9">
+    <div class="item-head">
+      <div class="item-num">09</div>
+      <div class="item-head-body">
+        <h3>组件生态：低代码大屏与素材库</h3>
+        <div class="item-en">即时设计 · EasyV · 山海鲸 · ThingJS-X</div>
+        <div class="badges">
+          <span class="badge">TOOL</span>
+          <span class="badge green">Low-Code</span>
+          <span class="badge purple">Asset</span>
+        </div>
+      </div>
+    </div>
+    <div class="visual"><img src="images/dt-09.png" alt="组件生态与低代码编辑器" loading="lazy" /></div>
+    <p>
+      当"数字孪生 UI"已经变成一种可复用的视觉语言，配套的<strong>组件模板与素材市场</strong>
+      正在快速沉淀：即时设计（js.design）有大量社区大屏模板，山海鲸内置 1000+ 3D 模型素材，
+      优锘 ThingJS-X 提供零代码的孪生交付，图观内置流渲染样机。
+    </p>
+    <div class="keypoints">
+      <ul>
+        <li>模板类别：科技边框 / 数据卡片 / 3D 城市 / 工业组态 / 图表 UI Kit。</li>
+        <li>取舍：先套模板保 80% 的完成度，重点资源花在关键场景 3D 建模。</li>
+        <li>坑：模板堆砌 ≠ 好设计，仍需回归"主次辅"信息层次校准。</li>
+      </ul>
+    </div>
+    <div class="sources">
+      SOURCE ·
+      <a href="https://js.design/special/resource-tag/visual-large-screen-mould.html" target="_blank" rel="noopener">即时设计 · 大屏模板</a>
+      <a href="https://dt.uino.com/product/studio.html" target="_blank" rel="noopener">ThingJS-X</a>
+      <a href="https://www.tuguan.net/online-experience/industry-model-room.html" target="_blank" rel="noopener">图观 · 在线体验</a>
+    </div>
+  </section>
+
+  <!-- Item 10 -->
+  <section class="item" id="item-10">
+    <div class="item-head">
+      <div class="item-num">10</div>
+      <div class="item-head-body">
+        <h3>性能底盘：LOD · 云渲染 · 流式加载</h3>
+        <div class="item-en">The Engineering Behind "Beautiful"</div>
+        <div class="badges">
+          <span class="badge">TECH</span>
+          <span class="badge warn">Perf</span>
+        </div>
+      </div>
+    </div>
+    <div class="visual"><img src="images/dt-10.png" alt="LOD · 云渲染 · 流式加载" loading="lazy" /></div>
+    <p>
+      再"好看"的视觉，如果不能在浏览器里流畅跑起来就等于零。
+      伏锂码云平台在挑战篇里点出<strong>三件事必须齐活</strong>——多层次 LOD、
+      云渲染与流式加载、以及轻量化终端渲染，才能在 Web/移动端还能保住视觉效果。
+    </p>
+    <div class="keypoints">
+      <ul>
+        <li>LOD：远景合并、近景走高精，配合"视锥剔除 + 实例化"提速。</li>
+        <li>云渲染：把重场景放到 GPU 服务器，客户端只收视频流。</li>
+        <li>低代码：让业务方自己配场景，减少"视觉一次性交付"的死代码。</li>
+      </ul>
+    </div>
+    <div class="sources">
+      SOURCE ·
+      <a href="https://www.fulima.com/poly/poly-detail-9988.htm" target="_blank" rel="noopener">伏锂码云平台 · 平台构建</a>
+      <a href="https://www.eefocus.com/article/1979565.html" target="_blank" rel="noopener">与非网 · 3D 建模≠数字孪生</a>
+    </div>
+  </section>
+
+  <footer>
+    <div>▍ <span class="glow">DIGITAL TWIN · VISUAL DESIGN REPORT</span> ▍</div>
+    <div style="margin-top:6px;">Curated on 2026-08-10 · Static build · No tracking</div>
+  </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,13 @@
+# Whitelist-only: this repo publishes ONLY the dt-design-daily site,
+# not the surrounding "Default Project" scratch directory contents.
+
+# Ignore everything by default
+/*
+/**/*
+
+# Whitelist site files
+!/.gitignore
+!/README.md
+!/index.html
+!/reports
+!/reports/**

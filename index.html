@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>数字孪生 · 3D · AIGC 视觉设计日报</title>
+<style>
+  :root{
+    --bg:#05070d;--panel:rgba(16,26,46,0.72);
+    --border:rgba(90,180,255,0.18);--border-strong:rgba(120,220,255,0.55);
+    --text:#d7e3f4;--text-dim:#8ea3c2;--text-mute:#5d7091;
+    --accent:#4dd0ff;--accent-2:#7f5cff;--accent-3:#29ffb6;
+    --mono:'JetBrains Mono','SF Mono','Consolas','Menlo',monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.65;font-size:15px;-webkit-font-smoothing:antialiased}
+  body{background:radial-gradient(ellipse 1200px 800px at 10% -10%,rgba(77,208,255,0.18),transparent 60%),radial-gradient(ellipse 900px 600px at 100% 20%,rgba(127,92,255,0.16),transparent 60%),radial-gradient(ellipse 1000px 700px at 50% 120%,rgba(41,255,182,0.08),transparent 60%),linear-gradient(180deg,#05070d 0%,#06091a 100%);min-height:100vh}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(90,180,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(90,180,255,0.04) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0}
+  .wrap{max-width:1080px;margin:0 auto;padding:64px 24px 96px;position:relative;z-index:1}
+  header.hero{border:1px solid var(--border);border-radius:14px;padding:36px 40px;background:linear-gradient(135deg,rgba(77,208,255,0.08),rgba(127,92,255,0.06)),var(--panel);backdrop-filter:blur(8px);position:relative;overflow:hidden;margin-bottom:40px}
+  header.hero::after{content:'';position:absolute;top:-80px;right:-80px;width:260px;height:260px;background:radial-gradient(circle,rgba(77,208,255,0.25),transparent 70%);filter:blur(24px)}
+  .tag-row{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;color:var(--text-dim);margin-bottom:16px}
+  .tag-row .dot{width:8px;height:8px;border-radius:50%;background:var(--accent-3);box-shadow:0 0 12px var(--accent-3);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+  h1.site-title{font-size:40px;margin:0 0 12px;letter-spacing:-0.5px;background:linear-gradient(135deg,#fff 0%,#7fdcff 60%,#b8a5ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700;line-height:1.15}
+  .site-subtitle{font-size:16px;color:var(--text-dim);margin:0 0 24px;max-width:720px}
+  .stats{display:flex;gap:24px;flex-wrap:wrap;margin-top:24px}
+  .stat{font-family:var(--mono)}
+  .stat .k{font-size:11px;color:var(--text-mute);letter-spacing:1px;text-transform:uppercase}
+  .stat .v{font-size:22px;color:#fff;font-weight:600;margin-top:2px}
+  .stat .v .unit{font-size:11px;color:var(--text-dim);margin-left:6px;font-weight:400}
+  h2.section{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin:48px 0 20px;font-weight:500}
+  .issues{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
+  .issue-card{position:relative;display:block;text-decoration:none;color:inherit;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--panel);backdrop-filter:blur(8px);transition:transform 0.2s,border-color 0.2s}
+  .issue-card:hover{transform:translateY(-4px);border-color:var(--border-strong)}
+  .cover{aspect-ratio:16/9;background:#050914;overflow:hidden;position:relative}
+  .cover img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.4s ease}
+  .cover svg{width:100%;height:100%;display:block;transition:transform 0.4s ease}
+  .issue-card:hover .cover img,.issue-card:hover .cover svg{transform:scale(1.04)}
+  .cover::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(5,9,20,0.85) 100%);pointer-events:none}
+  .card-body{padding:18px 20px 20px;position:relative}
+  .issue-no{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:1px}
+  .issue-date{font-family:var(--mono);font-size:11px;color:var(--text-mute);float:right}
+  .issue-title{font-size:16px;margin:8px 0 8px;color:#fff;font-weight:600;line-height:1.4}
+  .issue-subtitle{font-size:13px;color:var(--text-dim);margin:0 0 12px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .highlights{list-style:none;padding:0;margin:12px 0 0;font-size:12px;color:var(--text-dim)}
+  .highlights li{padding:3px 0 3px 12px;position:relative}
+  .highlights li::before{content:'▸';position:absolute;left:0;color:var(--accent);opacity:0.6}
+  .badge-curated{position:absolute;top:12px;right:12px;background:rgba(255,181,71,0.15);border:1px solid rgba(255,181,71,0.4);color:var(--warn);font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:4px;letter-spacing:0.5px;backdrop-filter:blur(6px);z-index:2}
+  footer{margin-top:80px;padding:30px 0;text-align:center;color:var(--text-mute);font-family:var(--mono);font-size:12px;border-top:1px dashed rgba(90,180,255,0.12)}
+  footer .glow{color:var(--accent);text-shadow:0 0 8px rgba(77,208,255,0.4)}
+  @media (max-width:720px){
+    .wrap{padding:32px 16px 60px}
+    header.hero{padding:24px}
+    h1.site-title{font-size:28px}
+    .issues{grid-template-columns:1fr;gap:16px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="tag-row">
+      <span class="dot"></span>
+      <span>DAILY · AUTO-CURATED</span>
+      <span>/</span>
+      <span>LATEST: 2026-08-11</span>
+    </div>
+    <h1 class="site-title">数字孪生 · 3D · AIGC 视觉设计日报</h1>
+    <p class="site-subtitle">Digital Twin · 3D · AIGC Visual Design Daily</p>
+    <div class="stats">
+      <div class="stat"><div class="k">Issues</div><div class="v">2<span class="unit">期</span></div></div>
+      <div class="stat"><div class="k">Topics</div><div class="v">10<span class="unit">主题槽/期</span></div></div>
+      <div class="stat"><div class="k">Cadence</div><div class="v">Daily<span class="unit">每日更新</span></div></div>
+    </div>
+  </header>
+
+  <h2 class="section">▍ ARCHIVE / 历史期号</h2>
+  <div class="issues">
+    <a class="issue-card" href="reports/2026-08-11/">
+      
+      <div class="cover cover-svg"><svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="2026-08-11 · 每日视觉设计">
+  <defs>
+    <linearGradient id="cg003" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a0f00"/>
+      <stop offset="100%" stop-color="#03060f"/>
+    </linearGradient>
+    <radialGradient id="crg003" cx="20%" cy="20%" r="70%">
+      <stop offset="0%" stop-color="#ffb547" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#ffb547" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="crg003b" cx="85%" cy="90%" r="60%">
+      <stop offset="0%" stop-color="#ffd08a" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#ffd08a" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="cgrid003" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#ffb547" stroke-opacity="0.08" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="450" fill="url(#cg003)"/>
+  <rect width="800" height="450" fill="url(#cgrid003)"/>
+  <rect width="800" height="450" fill="url(#crg003)"/>
+  <rect width="800" height="450" fill="url(#crg003b)"/>
+  <text x="60" y="200" font-family="JetBrains Mono, Consolas, monospace" font-size="24" letter-spacing="4" fill="#ffb547" opacity="0.9">ISSUE · 003</text>
+  <text x="60" y="290" font-family="JetBrains Mono, Consolas, monospace" font-size="88" font-weight="800" fill="#ffffff" letter-spacing="-2">2026-08-11</text>
+  <text x="60" y="340" font-family="'PingFang SC','Microsoft YaHei','Segoe UI',system-ui,sans-serif" font-size="22" fill="#d7e3f4" opacity="0.72">2026-08-11 · 每日视觉设计</text>
+  <rect x="60" y="360" width="120" height="3" fill="#ffb547" opacity="0.8"/>
+</svg></div>
+      <div class="card-body">
+        <span class="issue-no">ISSUE · 003</span>
+        <span class="issue-date">2026-08-11</span>
+        <h3 class="issue-title">2026-08-11 · 每日视觉设计</h3>
+        <p class="issue-subtitle">10 个主题槽 · 40 条信源 · 全自动生成</p>
+        <ul class="highlights"><li>AIGC 视觉设计趋势</li><li>数字孪生城市大屏</li><li>工业数字孪生</li></ul>
+      </div>
+    </a>
+    <a class="issue-card" href="reports/2026-08-10/">
+      <div class="badge-curated">CURATED</div>
+      <div class="cover"><img src="reports/2026-08-10/images/dt-02.png" alt="数字孪生视觉设计日报 · 首期" loading="lazy" /></div>
+      <div class="card-body">
+        <span class="issue-no">ISSUE · 001</span>
+        <span class="issue-date">2026-08-10</span>
+        <h3 class="issue-title">数字孪生视觉设计日报 · 首期</h3>
+        <p class="issue-subtitle">面向 CIM 底座、工业孪生、大屏与 HMI 沉浸式可视化的趋势与案例</p>
+        <ul class="highlights"><li>2026 视觉主基调：从&quot;炫技&quot;到&quot;叙事&quot;</li><li>城市数字孪生：CIM 底座的一屏统览</li><li>HMI × 数字孪生：沉浸式实时可视化</li></ul>
+      </div>
+    </a>
+  </div>
+
+  <footer>
+    <div>▍ <span class="glow">DT · 3D · AIGC VISUAL DESIGN DAILY</span> ▍</div>
+    <div style="margin-top:6px;">Auto-generated · Powered by Baidu Search + Nano Banana Pro · popo</div>
+  </footer>
+</div>
+</body>
+</html>
