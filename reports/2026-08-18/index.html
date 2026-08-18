@@ -17,37 +17,63 @@
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.65;font-size:15px;-webkit-font-smoothing:antialiased}
+  html{scroll-behavior:smooth}
   body{background:radial-gradient(ellipse 1200px 800px at 10% -10%,rgba(77,208,255,0.18),transparent 60%),radial-gradient(ellipse 900px 600px at 100% 20%,rgba(127,92,255,0.16),transparent 60%),radial-gradient(ellipse 1000px 700px at 50% 120%,rgba(41,255,182,0.08),transparent 60%),linear-gradient(180deg,#05070d 0%,#06091a 100%);min-height:100vh}
   body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(90,180,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(90,180,255,0.04) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0}
-  .wrap{max-width:960px;margin:0 auto;padding:48px 24px 96px;position:relative;z-index:1}
-  .back{display:inline-flex;align-items:center;gap:8px;color:var(--text-mute);text-decoration:none;font-family:var(--mono);font-size:12px;margin-bottom:20px}
-  .back:hover{color:var(--accent)}
+
+  .layout{max-width:1180px;margin:0 auto;padding:36px 24px 96px;position:relative;z-index:1;display:grid;grid-template-columns:220px 1fr;gap:36px;align-items:start}
+  .side-nav{position:sticky;top:24px;align-self:start;border:1px solid var(--border);border-radius:12px;padding:18px 16px;background:var(--panel);backdrop-filter:blur(8px);max-height:calc(100vh - 48px);overflow-y:auto}
+  .side-nav::-webkit-scrollbar{width:4px}
+  .side-nav::-webkit-scrollbar-thumb{background:rgba(90,180,255,0.2);border-radius:2px}
+  .side-nav .back{display:inline-flex;align-items:center;gap:6px;color:var(--text-mute);text-decoration:none;font-family:var(--mono);font-size:11px;margin-bottom:14px}
+  .side-nav .back:hover{color:var(--accent)}
+  .side-nav h2{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin:0 0 10px;font-weight:500}
+  .side-nav .nav-group{margin-bottom:14px}
+  .side-nav .nav-group-label{font-family:var(--mono);font-size:9px;color:var(--text-mute);letter-spacing:1.5px;text-transform:uppercase;margin:0 0 6px;padding-left:2px;opacity:0.7}
+  .side-nav ol{list-style:none;padding:0;margin:0}
+  .side-nav li{margin:0}
+  .side-nav a{display:flex;align-items:baseline;gap:8px;padding:6px 8px;color:var(--text-dim);text-decoration:none;font-size:12.5px;line-height:1.35;border-radius:4px;border-left:2px solid transparent;transition:all 0.15s}
+  .side-nav a:hover{background:rgba(90,180,255,0.06);color:var(--text);border-left-color:var(--accent)}
+  .side-nav .num{font-family:var(--mono);font-size:10px;color:var(--text-mute);flex-shrink:0;min-width:16px}
+  .side-nav .rel-dot{margin-left:auto;font-family:var(--mono);font-size:9px;color:var(--accent);opacity:0.75;flex-shrink:0}
+  .side-nav .site-link{display:block;margin-top:12px;padding-top:12px;border-top:1px dashed rgba(90,180,255,0.15);font-family:var(--mono);font-size:10px;color:var(--text-mute);text-align:center;text-decoration:none;letter-spacing:1px}
+  .side-nav .site-link:hover{color:var(--accent)}
+
+  .main-col{min-width:0}
   header.hero{border:1px solid var(--border);border-radius:14px;padding:28px 32px;background:linear-gradient(135deg,rgba(77,208,255,0.08),rgba(127,92,255,0.06)),var(--panel);backdrop-filter:blur(8px);position:relative;overflow:hidden}
   header.hero::after{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;background:radial-gradient(circle,rgba(77,208,255,0.25),transparent 70%);filter:blur(20px)}
   .tag-row{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;color:var(--text-dim);margin-bottom:14px}
   .tag-row .dot{width:8px;height:8px;border-radius:50%;background:var(--accent-3);box-shadow:0 0 12px var(--accent-3);animation:pulse 2s infinite}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
   .tag-row .sep{color:var(--text-mute)}
-  h1.title{font-size:32px;margin:0 0 10px;letter-spacing:-0.5px;background:linear-gradient(135deg,#fff 0%,#7fdcff 60%,#b8a5ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700}
-  .subtitle{font-size:15px;color:var(--text-dim);margin:0 0 20px;max-width:640px}
-  .meta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px}
-  .meta-cell{padding:12px 14px;background:rgba(10,20,40,0.5);border:1px solid var(--border);border-radius:8px}
-  .meta-cell .k{font-family:var(--mono);font-size:11px;color:var(--text-mute);text-transform:uppercase;letter-spacing:1px}
-  .meta-cell .v{font-size:18px;color:var(--text);font-weight:600;margin-top:2px}
-  .meta-cell .v .unit{font-size:11px;color:var(--text-dim);margin-left:4px;font-weight:400}
-  nav.toc{margin:32px 0 40px;border:1px solid var(--border);border-radius:12px;padding:20px 24px;background:var(--panel);backdrop-filter:blur(8px)}
-  nav.toc h2{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin:0 0 14px;font-weight:500}
-  nav.toc ol{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(2,1fr);gap:6px 20px;counter-reset:nav-counter}
-  nav.toc li{counter-increment:nav-counter;display:flex;align-items:baseline;gap:10px;padding:6px 0;font-size:14px;border-bottom:1px dashed rgba(90,180,255,0.08)}
-  nav.toc li::before{content:counter(nav-counter,decimal-leading-zero);font-family:var(--mono);font-size:11px;color:var(--text-mute);flex-shrink:0}
-  nav.toc a{color:var(--text-dim);text-decoration:none;transition:color 0.15s}
-  nav.toc a:hover{color:var(--accent)}
-  .item{margin:40px 0;padding:28px;background:var(--panel);border:1px solid var(--border);border-radius:12px;backdrop-filter:blur(8px);transition:border-color 0.2s,transform 0.2s;position:relative}
+  h1.title{font-size:30px;margin:0 0 10px;letter-spacing:-0.5px;background:linear-gradient(135deg,#fff 0%,#7fdcff 60%,#b8a5ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700}
+  .subtitle{font-size:14px;color:var(--text-dim);margin:0 0 18px;max-width:640px}
+  .meta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}
+  .meta-cell{padding:10px 12px;background:rgba(10,20,40,0.5);border:1px solid var(--border);border-radius:8px}
+  .meta-cell .k{font-family:var(--mono);font-size:10px;color:var(--text-mute);text-transform:uppercase;letter-spacing:1px}
+  .meta-cell .v{font-size:16px;color:var(--text);font-weight:600;margin-top:2px}
+  .meta-cell .v .unit{font-size:10px;color:var(--text-dim);margin-left:4px;font-weight:400}
+
+  .digest{margin:24px 0 0;border:1px solid var(--border);border-radius:12px;padding:22px 26px;background:linear-gradient(135deg,rgba(41,255,182,0.05),rgba(77,208,255,0.03)),var(--panel);backdrop-filter:blur(8px);position:relative;overflow:hidden}
+  .digest::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--accent-3),var(--accent))}
+  .digest .digest-label{font-family:var(--mono);font-size:10px;color:var(--accent-3);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:10px;font-weight:500;display:flex;align-items:center;gap:8px}
+  .digest .digest-label::before{content:'◆';color:var(--accent-3);text-shadow:0 0 8px var(--accent-3)}
+  .digest .digest-text{font-size:14.5px;line-height:1.75;color:var(--text);margin:0;text-indent:2em}
+
+  .section-title{margin:44px 0 20px;display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent)}
+  .section-title::before{content:'';flex:0 0 20px;height:1px;background:linear-gradient(90deg,transparent,var(--accent))}
+  .section-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--accent),transparent 40%)}
+  .section-title.warm{color:var(--accent-2)}
+  .section-title.warm::before{background:linear-gradient(90deg,transparent,var(--accent-2))}
+  .section-title.warm::after{background:linear-gradient(90deg,var(--accent-2),transparent 40%)}
+  .section-title .sub{font-family:var(--mono);font-size:10px;color:var(--text-mute);letter-spacing:1.5px;text-transform:none;opacity:0.75;font-weight:400}
+
+  .item{margin:28px 0;padding:26px;background:var(--panel);border:1px solid var(--border);border-radius:12px;backdrop-filter:blur(8px);transition:border-color 0.2s,transform 0.2s;position:relative;scroll-margin-top:24px}
   .item:hover{border-color:var(--border-strong);transform:translateY(-2px)}
-  .item-head{display:flex;align-items:flex-start;gap:16px;margin-bottom:18px}
-  .item-num{font-family:var(--mono);font-size:34px;line-height:1;color:var(--accent);font-weight:700;flex-shrink:0;text-shadow:0 0 20px rgba(77,208,255,0.4)}
-  .item-head-body{flex:1}
-  .item h3{font-size:20px;margin:0 0 6px;color:#fff;letter-spacing:-0.2px}
+  .item-head{display:flex;align-items:flex-start;gap:16px;margin-bottom:16px}
+  .item-num{font-family:var(--mono);font-size:30px;line-height:1;color:var(--accent);font-weight:700;flex-shrink:0;text-shadow:0 0 20px rgba(77,208,255,0.4)}
+  .item-head-body{flex:1;min-width:0}
+  .item h3{font-size:19px;margin:0 0 6px;color:#fff;letter-spacing:-0.2px}
   .item .item-en{font-family:var(--mono);font-size:12px;color:var(--text-mute);letter-spacing:0.5px}
   .badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
   .badge{font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:4px;letter-spacing:0.5px;background:rgba(77,208,255,0.1);border:1px solid rgba(77,208,255,0.25);color:var(--accent);text-transform:uppercase}
@@ -56,7 +82,7 @@
   .badge.warn{background:rgba(255,181,71,0.08);border-color:rgba(255,181,71,0.3);color:var(--warn)}
   .item p{margin:10px 0;color:var(--text-dim)}
   .item p strong{color:var(--text);font-weight:600}
-  .visual{margin:20px 0 4px;height:240px;border-radius:10px;position:relative;overflow:hidden;background:#050914;border:1px solid var(--border)}
+  .visual{margin:18px 0 4px;height:220px;border-radius:10px;position:relative;overflow:hidden;background:#050914;border:1px solid var(--border)}
   .visual img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.4s ease}
   .visual svg{width:100%;height:100%;display:block;transition:transform 0.4s ease}
   .item:hover .visual img,.item:hover .visual svg{transform:scale(1.02)}
@@ -64,229 +90,81 @@
   .sources{margin-top:16px;padding-top:14px;border-top:1px dashed rgba(90,180,255,0.15);font-family:var(--mono);font-size:12px;color:var(--text-mute)}
   .sources .src-label{color:var(--accent);font-family:var(--mono);font-size:11px;letter-spacing:1.5px;opacity:0.85;margin-bottom:6px}
   .sources ul{list-style:none;padding:0;margin:8px 0 0}
-  .sources li{margin:4px 0;color:var(--text-dim)}
+  .sources li{margin:8px 0;color:var(--text-dim);padding-bottom:8px;border-bottom:1px dotted rgba(90,180,255,0.08)}
+  .sources li:last-child{border-bottom:none}
   .sources a{color:var(--text-dim);text-decoration:none;border-bottom:1px dotted rgba(142,163,194,0.35)}
   .sources a:hover{color:var(--accent);border-bottom-color:var(--accent)}
-  .sources .snippet{color:var(--text-mute);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;font-size:12px;margin-top:2px;padding-left:8px;border-left:2px solid rgba(90,180,255,0.15)}
+  .sources .snippet{color:var(--text-mute);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;font-size:12.5px;margin-top:3px;padding-left:8px;border-left:2px solid rgba(90,180,255,0.15);line-height:1.55}
+  .sources .src-meta{margin-top:4px;padding-left:8px;display:flex;gap:8px;flex-wrap:wrap;font-size:11px;align-items:center}
+  .sources .rel{color:var(--accent);font-family:var(--mono);font-weight:600;letter-spacing:0.3px}
+  .sources .cred{padding:1px 6px;border-radius:3px;font-family:var(--mono);font-size:10px;letter-spacing:0.3px}
+  .sources .cred-hi{background:rgba(41,255,182,0.1);color:var(--accent-3);border:1px solid rgba(41,255,182,0.25)}
+  .sources .cred-mid{background:rgba(255,181,71,0.08);color:var(--warn);border:1px solid rgba(255,181,71,0.25)}
+  .sources .cred-lo{background:rgba(255,90,90,0.08);color:#ff8a8a;border:1px solid rgba(255,90,90,0.25)}
+  .sources .host{color:var(--text-mute);font-family:var(--mono);opacity:0.65;font-size:10px}
+
   footer{margin-top:60px;padding:30px 0;text-align:center;color:var(--text-mute);font-family:var(--mono);font-size:12px;border-top:1px dashed rgba(90,180,255,0.12)}
   footer .glow{color:var(--accent);text-shadow:0 0 8px rgba(77,208,255,0.4)}
-  @media (max-width:720px){
-    .wrap{padding:24px 16px 60px}
+
+  @media (max-width:960px){
+    .layout{grid-template-columns:1fr;gap:20px;padding:24px 16px 60px}
+    .side-nav{position:static;max-height:none;padding:14px 16px}
+    .side-nav ol{display:grid;grid-template-columns:repeat(2,1fr);gap:0 12px}
     h1.title{font-size:24px}
     .meta-grid{grid-template-columns:repeat(2,1fr)}
-    nav.toc ol{grid-template-columns:1fr}
     .item{padding:20px}
     .item-num{font-size:26px}
     .item h3{font-size:17px}
     .visual{height:180px}
+    .digest{padding:18px 20px}
   }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <a href="../../index.html" class="back">← 返回期号列表</a>
-  <header class="hero">
-    <div class="tag-row">
-      <span class="dot"></span>
-      <span>ISSUE · 009</span>
-      <span class="sep">/</span>
-      <span>2026-08-18</span>
-      <span class="sep">/</span>
-      <span>DT · 3D · AIGC · VISUAL DESIGN</span>
-    </div>
-    <h1 class="title">2026-08-18 · 每日视觉设计</h1>
-    <p class="subtitle">由脚本每日自动汇编 · 覆盖数字孪生、3D、AIGC 及相关领域的优秀视觉设计素材。信源来自公开互联网搜索，配图为纯代码生成的 SVG 视觉。</p>
-    <div class="meta-grid">
-      <div class="meta-cell"><div class="k">Topics</div><div class="v">10<span class="unit">条目</span></div></div>
-      <div class="meta-cell"><div class="k">Sources</div><div class="v">15<span class="unit">信源</span></div></div>
-      <div class="meta-cell"><div class="k">Images</div><div class="v">10<span class="unit">封面</span></div></div>
-      <div class="meta-cell"><div class="k">Build</div><div class="v">Auto<span class="unit">自动生成</span></div></div>
-    </div>
-  </header>
+<div class="layout">
+  <aside class="side-nav">
+    <a href="../../index.html" class="back">← 期号列表</a>
+    <h2>▍ Index · 08-18</h2>
+    <div class="nav-group"><div class="nav-group-label">◆ 本日重点</div><ol><li><a href="#slot-04"><span class="num">04</span><span class="txt">Web3D 与实时渲染</span><span class="rel-dot">9.0</span></a></li><li><a href="#slot-01"><span class="num">01</span><span class="txt">智慧城市数字孪生案例</span><span class="rel-dot">8.0</span></a></li><li><a href="#slot-02"><span class="num">02</span><span class="txt">工业与能源数字孪生</span><span class="rel-dot">8.0</span></a></li><li><a href="#slot-08"><span class="num">08</span><span class="txt">GIS × BIM × CIM 融合</span><span class="rel-dot">8.0</span></a></li><li><a href="#slot-07"><span class="num">07</span><span class="txt">数据可视化与叙事</span><span class="rel-dot">7.8</span></a></li></ol></div><div class="nav-group"><div class="nav-group-label">◇ 近期热点</div><ol><li><a href="#slot-06"><span class="num">06</span><span class="txt">AIGC 3D 生成与建模</span><span class="rel-dot">7.5</span></a></li><li><a href="#slot-05"><span class="num">05</span><span class="txt">空间计算与 XR 交互</span><span class="rel-dot">7.2</span></a></li><li><a href="#slot-03"><span class="num">03</span><span class="txt">大屏视觉语言与信息层级</span><span class="rel-dot">7.0</span></a></li><li><a href="#slot-09"><span class="num">09</span><span class="txt">交互动效与微交互</span><span class="rel-dot">5.0</span></a></li><li><a href="#slot-10"><span class="num">10</span><span class="txt">行业动态与标准</span><span class="rel-dot">4.5</span></a></li></ol></div>
+    <a href="#top" class="site-link">↑ 回到顶部</a>
+  </aside>
 
-  <nav class="toc">
-    <h2>▍ Table of Contents</h2>
-    <ol><li><a href="#slot-01">AIGC 视觉设计趋势</a></li>
-      <li><a href="#slot-02">数字孪生城市大屏</a></li>
-      <li><a href="#slot-03">工业数字孪生</a></li>
-      <li><a href="#slot-04">3D 视觉设计与建模</a></li>
-      <li><a href="#slot-05">沉浸式 HMI 与空间计算</a></li>
-      <li><a href="#slot-06">大屏与仪表盘方法论</a></li>
-      <li><a href="#slot-07">AIGC 交互与 Prompt 界面</a></li>
-      <li><a href="#slot-08">AIGC 视频与创意</a></li>
-      <li><a href="#slot-09">组件生态与低代码</a></li>
-      <li><a href="#slot-10">性能底盘与工程实现</a></li></ol>
-  </nav>
-
-    <section class="item" id="slot-01">
-    <div class="item-head">
-      <div class="item-num">01</div>
-      <div class="item-head-body">
-        <h3>AIGC 视觉设计趋势</h3>
-        <div class="item-en">AIGC Visual Design Trends</div>
-        <div class="badges">
-          <span class="badge ">TREND</span>
-          <span class="badge purple">AIGC</span>
-        </div>
+  <main class="main-col">
+    <header class="hero" id="top">
+      <div class="tag-row">
+        <span class="dot"></span>
+        <span>ISSUE · 010</span>
+        <span class="sep">/</span>
+        <span>2026-08-18</span>
+        <span class="sep">/</span>
+        <span>DT · 3D · AIGC · VISUAL DESIGN</span>
       </div>
-    </div>
-    <div class="visual visual-svg"><svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AIGC 视觉设计趋势">
-  <defs>
-    <linearGradient id="g01" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0a1020"/>
-      <stop offset="100%" stop-color="#03060f"/>
-    </linearGradient>
-    <radialGradient id="rg01" cx="18%" cy="20%" r="70%">
-      <stop offset="0%" stop-color="#4dd0ff" stop-opacity="0.45"/>
-      <stop offset="100%" stop-color="#4dd0ff" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="rg01b" cx="90%" cy="90%" r="60%">
-      <stop offset="0%" stop-color="#7fdcff" stop-opacity="0.22"/>
-      <stop offset="100%" stop-color="#7fdcff" stop-opacity="0"/>
-    </radialGradient>
-    <pattern id="grid01" width="32" height="32" patternUnits="userSpaceOnUse">
-      <path d="M32 0H0V32" fill="none" stroke="#4dd0ff" stroke-opacity="0.07" stroke-width="1"/>
-    </pattern>
-  </defs>
-  <rect width="800" height="450" fill="url(#g01)"/>
-  <rect width="800" height="450" fill="url(#grid01)"/>
-  <rect width="800" height="450" fill="url(#rg01)"/>
-  <rect width="800" height="450" fill="url(#rg01b)"/>
-  <rect x="0" y="0" width="4" height="450" fill="#4dd0ff"/>
-  <text x="40" y="405" font-family="JetBrains Mono, Consolas, monospace" font-size="260" font-weight="800" fill="#4dd0ff" opacity="0.14" letter-spacing="-6">01</text>
-  <text x="40" y="90" font-family="JetBrains Mono, Consolas, monospace" font-size="12" letter-spacing="4" fill="#4dd0ff" opacity="0.85">SLOT · 01</text>
-  <text x="40" y="150" font-family="'PingFang SC','Microsoft YaHei','Segoe UI',system-ui,sans-serif" font-size="40" font-weight="700" fill="#ffffff">AIGC 视觉设计趋势</text>
-  <text x="40" y="184" font-family="JetBrains Mono, Consolas, monospace" font-size="14" fill="#d7e3f4" opacity="0.72">AIGC Visual Design Trends</text>
-  <g transform="translate(692 40)"><rect width="60" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#4dd0ff" stroke-opacity="0.5"/><text x="30.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#7fdcff" text-anchor="middle" letter-spacing="1">AIGC</text></g>
-    <g transform="translate(614 40)"><rect width="70" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#4dd0ff" stroke-opacity="0.5"/><text x="35.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#7fdcff" text-anchor="middle" letter-spacing="1">TREND</text></g>
-</svg></div>
-    <p>本日抓取到 2 条相关素材。</p>
-    <div class="sources">
-      <div class="src-label">SOURCES · 信源</div>
-      <ul>
-          <li><a href="https://www.uisdc.com/2026-design-career-trends" target="_blank" rel="noopener">2026年AI驱动下,我总结了设计师职业的9大趋势 - 优设网 - 学AI...</a><div class="snippet"></div></li>
-          <li><a href="https://tieba.baidu.com/p/10940111670" target="_blank" rel="noopener">2026 AI UI设计六大新趋势 - 百度贴吧</a><div class="snippet"></div></li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="item" id="slot-02">
-    <div class="item-head">
-      <div class="item-num">02</div>
-      <div class="item-head-body">
-        <h3>数字孪生城市大屏</h3>
-        <div class="item-en">Digital Twin City Dashboard</div>
-        <div class="badges">
-          <span class="badge ">CASE</span>
-          <span class="badge green">SmartCity</span>
-        </div>
+      <h1 class="title">2026-08-18 · 每日视觉设计</h1>
+      <p class="subtitle">每日自动汇编 · 覆盖数字孪生、3D、AIGC 及相关领域的优秀视觉设计素材。由千帆 ERNIE 对信源进行相关度评分与摘要，本日重点区收纳评分最高的一半主题。</p>
+      <div class="meta-grid">
+        <div class="meta-cell"><div class="k">Topics</div><div class="v">10<span class="unit">条目</span></div></div>
+        <div class="meta-cell"><div class="k">Sources</div><div class="v">40<span class="unit">信源</span></div></div>
+        <div class="meta-cell"><div class="k">Avg · Rel</div><div class="v">7.2<span class="unit">/10</span></div></div>
+        <div class="meta-cell"><div class="k">Build</div><div class="v">Auto<span class="unit">自动生成</span></div></div>
       </div>
-    </div>
-    <div class="visual visual-svg"><svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="数字孪生城市大屏">
-  <defs>
-    <linearGradient id="g02" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0a0f28"/>
-      <stop offset="100%" stop-color="#03060f"/>
-    </linearGradient>
-    <radialGradient id="rg02" cx="18%" cy="20%" r="70%">
-      <stop offset="0%" stop-color="#7f5cff" stop-opacity="0.45"/>
-      <stop offset="100%" stop-color="#7f5cff" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="rg02b" cx="90%" cy="90%" r="60%">
-      <stop offset="0%" stop-color="#b8a5ff" stop-opacity="0.22"/>
-      <stop offset="100%" stop-color="#b8a5ff" stop-opacity="0"/>
-    </radialGradient>
-    <pattern id="grid02" width="32" height="32" patternUnits="userSpaceOnUse">
-      <path d="M32 0H0V32" fill="none" stroke="#7f5cff" stroke-opacity="0.07" stroke-width="1"/>
-    </pattern>
-  </defs>
-  <rect width="800" height="450" fill="url(#g02)"/>
-  <rect width="800" height="450" fill="url(#grid02)"/>
-  <rect width="800" height="450" fill="url(#rg02)"/>
-  <rect width="800" height="450" fill="url(#rg02b)"/>
-  <rect x="0" y="0" width="4" height="450" fill="#7f5cff"/>
-  <text x="40" y="405" font-family="JetBrains Mono, Consolas, monospace" font-size="260" font-weight="800" fill="#7f5cff" opacity="0.14" letter-spacing="-6">02</text>
-  <text x="40" y="90" font-family="JetBrains Mono, Consolas, monospace" font-size="12" letter-spacing="4" fill="#7f5cff" opacity="0.85">SLOT · 02</text>
-  <text x="40" y="150" font-family="'PingFang SC','Microsoft YaHei','Segoe UI',system-ui,sans-serif" font-size="40" font-weight="700" fill="#ffffff">数字孪生城市大屏</text>
-  <text x="40" y="184" font-family="JetBrains Mono, Consolas, monospace" font-size="14" fill="#d7e3f4" opacity="0.72">Digital Twin City Dashboard</text>
-  <g transform="translate(642 40)"><rect width="110" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#7f5cff" stroke-opacity="0.5"/><text x="55.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#b8a5ff" text-anchor="middle" letter-spacing="1">SmartCity</text></g>
-    <g transform="translate(574 40)"><rect width="60" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#7f5cff" stroke-opacity="0.5"/><text x="30.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#b8a5ff" text-anchor="middle" letter-spacing="1">CASE</text></g>
-</svg></div>
-    <p>本日抓取到 1 条相关素材。</p>
-    <div class="sources">
-      <div class="src-label">SOURCES · 信源</div>
-      <ul>
-          <li><a href="https://www.arup.com/globalassets/downloads/insights/digital-twin-towards-a-meaningful-framework.pdf" target="_blank" rel="noopener">Digital twin</a><div class="snippet"></div></li>
-      </ul>
-    </div>
-  </section>
+    </header>
 
-  <section class="item" id="slot-03">
-    <div class="item-head">
-      <div class="item-num">03</div>
-      <div class="item-head-body">
-        <h3>工业数字孪生</h3>
-        <div class="item-en">Industrial Digital Twin</div>
-        <div class="badges">
-          <span class="badge ">CASE</span>
-          <span class="badge purple">Industry</span>
-        </div>
-      </div>
-    </div>
-    <div class="visual visual-svg"><svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="工业数字孪生">
-  <defs>
-    <linearGradient id="g03" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#031a15"/>
-      <stop offset="100%" stop-color="#03060f"/>
-    </linearGradient>
-    <radialGradient id="rg03" cx="18%" cy="20%" r="70%">
-      <stop offset="0%" stop-color="#29ffb6" stop-opacity="0.45"/>
-      <stop offset="100%" stop-color="#29ffb6" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="rg03b" cx="90%" cy="90%" r="60%">
-      <stop offset="0%" stop-color="#7fffce" stop-opacity="0.22"/>
-      <stop offset="100%" stop-color="#7fffce" stop-opacity="0"/>
-    </radialGradient>
-    <pattern id="grid03" width="32" height="32" patternUnits="userSpaceOnUse">
-      <path d="M32 0H0V32" fill="none" stroke="#29ffb6" stroke-opacity="0.07" stroke-width="1"/>
-    </pattern>
-  </defs>
-  <rect width="800" height="450" fill="url(#g03)"/>
-  <rect width="800" height="450" fill="url(#grid03)"/>
-  <rect width="800" height="450" fill="url(#rg03)"/>
-  <rect width="800" height="450" fill="url(#rg03b)"/>
-  <rect x="0" y="0" width="4" height="450" fill="#29ffb6"/>
-  <text x="40" y="405" font-family="JetBrains Mono, Consolas, monospace" font-size="260" font-weight="800" fill="#29ffb6" opacity="0.14" letter-spacing="-6">03</text>
-  <text x="40" y="90" font-family="JetBrains Mono, Consolas, monospace" font-size="12" letter-spacing="4" fill="#29ffb6" opacity="0.85">SLOT · 03</text>
-  <text x="40" y="150" font-family="'PingFang SC','Microsoft YaHei','Segoe UI',system-ui,sans-serif" font-size="40" font-weight="700" fill="#ffffff">工业数字孪生</text>
-  <text x="40" y="184" font-family="JetBrains Mono, Consolas, monospace" font-size="14" fill="#d7e3f4" opacity="0.72">Industrial Digital Twin</text>
-  <g transform="translate(652 40)"><rect width="100" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#29ffb6" stroke-opacity="0.5"/><text x="50.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#7fffce" text-anchor="middle" letter-spacing="1">Industry</text></g>
-    <g transform="translate(584 40)"><rect width="60" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#29ffb6" stroke-opacity="0.5"/><text x="30.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#7fffce" text-anchor="middle" letter-spacing="1">CASE</text></g>
-</svg></div>
-    <p>本日抓取到 3 条相关素材。</p>
-    <div class="sources">
-      <div class="src-label">SOURCES · 信源</div>
-      <ul>
-          <li><a href="https://www.aveva.com/en/industries/manufacturing/" target="_blank" rel="noopener">Software Solutions For Manufacturing | AVEVA</a><div class="snippet"></div></li>
-          <li><a href="http://www.toobler.com/blog/future-of-digital-twins" target="_blank" rel="noopener">Future of Digital Twins: What Comes Next for Industry</a><div class="snippet"></div></li>
-          <li><a href="https://en.jerei.com/de/aboutus.htm" target="_blank" rel="noopener">Company Profile-Shandong Jerei Digital Technology Co., Ltd.</a><div class="snippet"></div></li>
-      </ul>
-    </div>
-  </section>
+    <div class="digest"><div class="digest-label">本期摘要 · Editor's Note</div><p class="digest-text">本期聚焦数字孪生与交互设计的前沿实践：腾讯云电力数字孪生指南与本影科技AirCIM平台双双登顶，揭示从3D大屏到智慧城市全场景落地的技术路径；Cesium在实时渲染领域的突破性应用，为Web3D开发者提供新工具链参考。另推荐AgentForge的AIGC全链路案例，看AI生成内容如何无缝嵌入Unity场景，值得3D设计师深入拆解。</p></div>
 
+    <div class="section-title">▍ 本日重点<span class="sub">Today · Focus</span></div>
   <section class="item" id="slot-04">
     <div class="item-head">
       <div class="item-num">04</div>
       <div class="item-head-body">
-        <h3>3D 视觉设计与建模</h3>
-        <div class="item-en">3D Visual Design &amp; Modeling</div>
+        <h3>Web3D 与实时渲染</h3>
+        <div class="item-en">Web3D &amp; Real-time Rendering</div>
         <div class="badges">
-          <span class="badge purple">3D</span>
-          <span class="badge ">Design</span>
+          <span class="badge ">TECH</span>
+          <span class="badge ">Web3D</span>
         </div>
       </div>
     </div>
-    <div class="visual visual-svg"><svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="3D 视觉设计与建模">
+    <div class="visual visual-svg"><svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Web3D 与实时渲染">
   <defs>
     <linearGradient id="g04" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#20090f"/>
@@ -311,169 +189,127 @@
   <rect x="0" y="0" width="4" height="450" fill="#ff6d8f"/>
   <text x="40" y="405" font-family="JetBrains Mono, Consolas, monospace" font-size="260" font-weight="800" fill="#ff6d8f" opacity="0.14" letter-spacing="-6">04</text>
   <text x="40" y="90" font-family="JetBrains Mono, Consolas, monospace" font-size="12" letter-spacing="4" fill="#ff6d8f" opacity="0.85">SLOT · 04</text>
-  <text x="40" y="150" font-family="'PingFang SC','Microsoft YaHei','Segoe UI',system-ui,sans-serif" font-size="40" font-weight="700" fill="#ffffff">3D 视觉设计与建模</text>
-  <text x="40" y="184" font-family="JetBrains Mono, Consolas, monospace" font-size="14" fill="#d7e3f4" opacity="0.72">3D Visual Design &amp; Modeling</text>
-  <g transform="translate(672 40)"><rect width="80" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#ff6d8f" stroke-opacity="0.5"/><text x="40.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#ffb0c2" text-anchor="middle" letter-spacing="1">Design</text></g>
-    <g transform="translate(616 40)"><rect width="48" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#ff6d8f" stroke-opacity="0.5"/><text x="24.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#ffb0c2" text-anchor="middle" letter-spacing="1">3D</text></g>
+  <text x="40" y="150" font-family="'PingFang SC','Microsoft YaHei','Segoe UI',system-ui,sans-serif" font-size="40" font-weight="700" fill="#ffffff">Web3D 与实时渲染</text>
+  <text x="40" y="184" font-family="JetBrains Mono, Consolas, monospace" font-size="14" fill="#d7e3f4" opacity="0.72">Web3D &amp; Real-time Rendering</text>
+  <g transform="translate(682 40)"><rect width="70" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#ff6d8f" stroke-opacity="0.5"/><text x="35.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#ffb0c2" text-anchor="middle" letter-spacing="1">Web3D</text></g>
+    <g transform="translate(614 40)"><rect width="60" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#ff6d8f" stroke-opacity="0.5"/><text x="30.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#ffb0c2" text-anchor="middle" letter-spacing="1">TECH</text></g>
 </svg></div>
-    <p>本日抓取到 2 条相关素材。</p>
+    <p>Cesium在数字孪生中的应用介绍</p>
     <div class="sources">
       <div class="src-label">SOURCES · 信源</div>
       <ul>
-          <li><a href="https://www.nngroup.com/topic/visual-design/" target="_blank" rel="noopener">Visual Design Articles, Videos, Reports, and Training Courses...</a><div class="snippet"></div></li>
-          <li><a href="https://baijiahao.baidu.com/s?id=1869933644849405798&amp;amp;wfr=spider&amp;amp;for=pc" target="_blank" rel="noopener">2026年6月份近期盘点:主流3D动态设计软件有哪些</a><div class="snippet"></div></li>
+          <li><a href="https://cesium.com/use-cases/digital-twins/" target="_blank" rel="noopener">Digital Twins – Cesium</a><div class="src-meta"><span class="rel">相关 10/10</span><span class="cred cred-hi">可信 · 高</span><span class="host">cesium.com</span></div><div class="snippet">Cesium在数字孪生中的应用介绍</div></li>
+          <li><a href="https://threejs.org/examples/webgpu_lights_pointlights.html" target="_blank" rel="noopener">three.js webgpu - point lights</a><div class="src-meta"><span class="rel">相关 9/10</span><span class="cred cred-hi">可信 · 高</span><span class="host">threejs.org</span></div><div class="snippet">three.js中WebGPU点光源技术的探讨</div></li>
+          <li><a href="https://threejs.org/examples/webgpu_tsl_editor.html" target="_blank" rel="noopener">three.js webgpu - tsl editor</a><div class="src-meta"><span class="rel">相关 9/10</span><span class="cred cred-hi">可信 · 高</span><span class="host">threejs.org</span></div><div class="snippet">three.js的webgpu与tsl编辑器，助力Web3D开发。</div></li>
+          <li><a href="https://cloud.tencent.com/developer/article/2611643" target="_blank" rel="noopener">如何评价 Three.js?从“网页 PPT”到“数字孪生”的破次元壁神器...</a><div class="src-meta"><span class="rel">相关 8/10</span><span class="cred cred-hi">可信 · 高</span><span class="host">cloud.tencent.com</span></div><div class="snippet">Three.js从网页PPT到数字孪生应用的转变与评价。</div></li>
       </ul>
     </div>
   </section>
 
-  <section class="item" id="slot-05">
+  <section class="item" id="slot-01">
     <div class="item-head">
-      <div class="item-num">05</div>
+      <div class="item-num">01</div>
       <div class="item-head-body">
-        <h3>沉浸式 HMI 与空间计算</h3>
-        <div class="item-en">Immersive HMI &amp; Spatial Computing</div>
+        <h3>智慧城市数字孪生案例</h3>
+        <div class="item-en">Smart City Digital Twin Cases</div>
         <div class="badges">
-          <span class="badge green">HMI</span>
-          <span class="badge purple">XR</span>
+          <span class="badge ">CASE</span>
+          <span class="badge green">SmartCity</span>
         </div>
       </div>
     </div>
-    <div class="visual visual-svg"><svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="沉浸式 HMI 与空间计算">
+    <div class="visual visual-svg"><svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="智慧城市数字孪生案例">
   <defs>
-    <linearGradient id="g05" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1a0f00"/>
+    <linearGradient id="g01" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a1020"/>
       <stop offset="100%" stop-color="#03060f"/>
     </linearGradient>
-    <radialGradient id="rg05" cx="18%" cy="20%" r="70%">
-      <stop offset="0%" stop-color="#ffb547" stop-opacity="0.45"/>
-      <stop offset="100%" stop-color="#ffb547" stop-opacity="0"/>
+    <radialGradient id="rg01" cx="18%" cy="20%" r="70%">
+      <stop offset="0%" stop-color="#4dd0ff" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#4dd0ff" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="rg05b" cx="90%" cy="90%" r="60%">
-      <stop offset="0%" stop-color="#ffd08a" stop-opacity="0.22"/>
-      <stop offset="100%" stop-color="#ffd08a" stop-opacity="0"/>
+    <radialGradient id="rg01b" cx="90%" cy="90%" r="60%">
+      <stop offset="0%" stop-color="#7fdcff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#7fdcff" stop-opacity="0"/>
     </radialGradient>
-    <pattern id="grid05" width="32" height="32" patternUnits="userSpaceOnUse">
-      <path d="M32 0H0V32" fill="none" stroke="#ffb547" stroke-opacity="0.07" stroke-width="1"/>
+    <pattern id="grid01" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#4dd0ff" stroke-opacity="0.07" stroke-width="1"/>
     </pattern>
   </defs>
-  <rect width="800" height="450" fill="url(#g05)"/>
-  <rect width="800" height="450" fill="url(#grid05)"/>
-  <rect width="800" height="450" fill="url(#rg05)"/>
-  <rect width="800" height="450" fill="url(#rg05b)"/>
-  <rect x="0" y="0" width="4" height="450" fill="#ffb547"/>
-  <text x="40" y="405" font-family="JetBrains Mono, Consolas, monospace" font-size="260" font-weight="800" fill="#ffb547" opacity="0.14" letter-spacing="-6">05</text>
-  <text x="40" y="90" font-family="JetBrains Mono, Consolas, monospace" font-size="12" letter-spacing="4" fill="#ffb547" opacity="0.85">SLOT · 05</text>
-  <text x="40" y="150" font-family="'PingFang SC','Microsoft YaHei','Segoe UI',system-ui,sans-serif" font-size="40" font-weight="700" fill="#ffffff">沉浸式 HMI 与空间计算</text>
-  <text x="40" y="184" font-family="JetBrains Mono, Consolas, monospace" font-size="14" fill="#d7e3f4" opacity="0.72">Immersive HMI &amp; Spatial Computing</text>
-  <g transform="translate(704 40)"><rect width="48" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#ffb547" stroke-opacity="0.5"/><text x="24.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#ffd08a" text-anchor="middle" letter-spacing="1">XR</text></g>
-    <g transform="translate(646 40)"><rect width="50" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#ffb547" stroke-opacity="0.5"/><text x="25.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#ffd08a" text-anchor="middle" letter-spacing="1">HMI</text></g>
+  <rect width="800" height="450" fill="url(#g01)"/>
+  <rect width="800" height="450" fill="url(#grid01)"/>
+  <rect width="800" height="450" fill="url(#rg01)"/>
+  <rect width="800" height="450" fill="url(#rg01b)"/>
+  <rect x="0" y="0" width="4" height="450" fill="#4dd0ff"/>
+  <text x="40" y="405" font-family="JetBrains Mono, Consolas, monospace" font-size="260" font-weight="800" fill="#4dd0ff" opacity="0.14" letter-spacing="-6">01</text>
+  <text x="40" y="90" font-family="JetBrains Mono, Consolas, monospace" font-size="12" letter-spacing="4" fill="#4dd0ff" opacity="0.85">SLOT · 01</text>
+  <text x="40" y="150" font-family="'PingFang SC','Microsoft YaHei','Segoe UI',system-ui,sans-serif" font-size="40" font-weight="700" fill="#ffffff">智慧城市数字孪生案例</text>
+  <text x="40" y="184" font-family="JetBrains Mono, Consolas, monospace" font-size="14" fill="#d7e3f4" opacity="0.72">Smart City Digital Twin Cases</text>
+  <g transform="translate(642 40)"><rect width="110" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#4dd0ff" stroke-opacity="0.5"/><text x="55.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#7fdcff" text-anchor="middle" letter-spacing="1">SmartCity</text></g>
+    <g transform="translate(574 40)"><rect width="60" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#4dd0ff" stroke-opacity="0.5"/><text x="30.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#7fdcff" text-anchor="middle" letter-spacing="1">CASE</text></g>
 </svg></div>
-    <p>本日抓取到 1 条相关素材。</p>
+    <p>漳州智慧排水平台获智慧城市应用案例二等奖，具参考价值。</p>
     <div class="sources">
       <div class="src-label">SOURCES · 信源</div>
       <ul>
-          <li><a href="https://k.sina.com.cn/article_7879776492_1d5abd8ec06801dung.html" target="_blank" rel="noopener">2026沉浸式座舱娱乐升级了什么?3个维度看懂主动式交互+FAQ|HUD|...</a><div class="snippet"></div></li>
+          <li><a href="http://www.zhangzhou.gov.cn/cms/html/zzszfhcxjsj/2026-08-10/1431154999.html" target="_blank" rel="noopener">漳州智慧排水平台获评2026年度智慧城市应用案例二等奖 - 工作动态</a><div class="src-meta"><span class="rel">相关 9/10</span><span class="cred cred-hi">可信 · 高</span><span class="host">www.zhangzhou.gov.cn</span></div><div class="snippet">漳州智慧排水平台获智慧城市应用案例二等奖，具参考价值。</div></li>
+          <li><a href="https://mp.weixin.qq.com/s?__biz=MzI5OTEyNzkxMg==&amp;amp;mid=2247607577&amp;amp;idx=2&amp;amp;sn=24636a0f7cfdffcfad84eeb40db71957&amp;amp;chksm=eda13f9b91d4845ef492afc76dd252678c2675c0a51a82257737aab0e8e273484e68b7c3a4d0&amp;amp;scene=27" target="_blank" rel="noopener">物联网&amp;智慧城市创新实践|济南新旧动能转换起步区数字孪生平台</a><div class="src-meta"><span class="rel">相关 8/10</span><span class="cred cred-mid">可信 · 中</span><span class="host">mp.weixin.qq.com</span></div><div class="snippet">济南起步区数字孪生平台，聚焦智慧城市创新实践。</div></li>
+          <li><a href="https://me.digitaltwin-summit.com/" target="_blank" rel="noopener">DIGITAL TWIN 2026 | DUBAI, UAE | SMART CITIES | CONSTRUCTION...</a><div class="src-meta"><span class="rel">相关 8/10</span><span class="cred cred-mid">可信 · 中</span><span class="host">me.digitaltwin-summit.com</span></div><div class="snippet">迪拜智慧城市数字孪生建设相关会议信息。</div></li>
+          <li><a href="https://cloud.tencent.com/developer/article/2676718" target="_blank" rel="noopener">数字孪生技术 2026:从概念验证到规模化落地的关键跃迁-腾讯云开发...</a><div class="src-meta"><span class="rel">相关 7/10</span><span class="cred cred-hi">可信 · 高</span><span class="host">cloud.tencent.com</span></div><div class="snippet">腾讯云探讨数字孪生技术从概念到落地的关键发展。</div></li>
       </ul>
     </div>
   </section>
 
-  <section class="item" id="slot-06">
+  <section class="item" id="slot-02">
     <div class="item-head">
-      <div class="item-num">06</div>
+      <div class="item-num">02</div>
       <div class="item-head-body">
-        <h3>大屏与仪表盘方法论</h3>
-        <div class="item-en">Dashboard Methodology</div>
+        <h3>工业与能源数字孪生</h3>
+        <div class="item-en">Industrial &amp; Energy Digital Twin</div>
         <div class="badges">
-          <span class="badge ">METHOD</span>
+          <span class="badge ">CASE</span>
+          <span class="badge purple">Industry</span>
         </div>
       </div>
     </div>
-    <div class="visual visual-svg"><svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="大屏与仪表盘方法论">
+    <div class="visual visual-svg"><svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="工业与能源数字孪生">
   <defs>
-    <linearGradient id="g06" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#001818"/>
+    <linearGradient id="g02" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0f28"/>
       <stop offset="100%" stop-color="#03060f"/>
     </linearGradient>
-    <radialGradient id="rg06" cx="18%" cy="20%" r="70%">
-      <stop offset="0%" stop-color="#4dfff0" stop-opacity="0.45"/>
-      <stop offset="100%" stop-color="#4dfff0" stop-opacity="0"/>
+    <radialGradient id="rg02" cx="18%" cy="20%" r="70%">
+      <stop offset="0%" stop-color="#7f5cff" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#7f5cff" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="rg06b" cx="90%" cy="90%" r="60%">
-      <stop offset="0%" stop-color="#a5fff5" stop-opacity="0.22"/>
-      <stop offset="100%" stop-color="#a5fff5" stop-opacity="0"/>
+    <radialGradient id="rg02b" cx="90%" cy="90%" r="60%">
+      <stop offset="0%" stop-color="#b8a5ff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#b8a5ff" stop-opacity="0"/>
     </radialGradient>
-    <pattern id="grid06" width="32" height="32" patternUnits="userSpaceOnUse">
-      <path d="M32 0H0V32" fill="none" stroke="#4dfff0" stroke-opacity="0.07" stroke-width="1"/>
+    <pattern id="grid02" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#7f5cff" stroke-opacity="0.07" stroke-width="1"/>
     </pattern>
   </defs>
-  <rect width="800" height="450" fill="url(#g06)"/>
-  <rect width="800" height="450" fill="url(#grid06)"/>
-  <rect width="800" height="450" fill="url(#rg06)"/>
-  <rect width="800" height="450" fill="url(#rg06b)"/>
-  <rect x="0" y="0" width="4" height="450" fill="#4dfff0"/>
-  <text x="40" y="405" font-family="JetBrains Mono, Consolas, monospace" font-size="260" font-weight="800" fill="#4dfff0" opacity="0.14" letter-spacing="-6">06</text>
-  <text x="40" y="90" font-family="JetBrains Mono, Consolas, monospace" font-size="12" letter-spacing="4" fill="#4dfff0" opacity="0.85">SLOT · 06</text>
-  <text x="40" y="150" font-family="'PingFang SC','Microsoft YaHei','Segoe UI',system-ui,sans-serif" font-size="40" font-weight="700" fill="#ffffff">大屏与仪表盘方法论</text>
-  <text x="40" y="184" font-family="JetBrains Mono, Consolas, monospace" font-size="14" fill="#d7e3f4" opacity="0.72">Dashboard Methodology</text>
-  <g transform="translate(672 40)"><rect width="80" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#4dfff0" stroke-opacity="0.5"/><text x="40.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#a5fff5" text-anchor="middle" letter-spacing="1">METHOD</text></g>
+  <rect width="800" height="450" fill="url(#g02)"/>
+  <rect width="800" height="450" fill="url(#grid02)"/>
+  <rect width="800" height="450" fill="url(#rg02)"/>
+  <rect width="800" height="450" fill="url(#rg02b)"/>
+  <rect x="0" y="0" width="4" height="450" fill="#7f5cff"/>
+  <text x="40" y="405" font-family="JetBrains Mono, Consolas, monospace" font-size="260" font-weight="800" fill="#7f5cff" opacity="0.14" letter-spacing="-6">02</text>
+  <text x="40" y="90" font-family="JetBrains Mono, Consolas, monospace" font-size="12" letter-spacing="4" fill="#7f5cff" opacity="0.85">SLOT · 02</text>
+  <text x="40" y="150" font-family="'PingFang SC','Microsoft YaHei','Segoe UI',system-ui,sans-serif" font-size="40" font-weight="700" fill="#ffffff">工业与能源数字孪生</text>
+  <text x="40" y="184" font-family="JetBrains Mono, Consolas, monospace" font-size="14" fill="#d7e3f4" opacity="0.72">Industrial &amp; Energy Digital Twin</text>
+  <g transform="translate(652 40)"><rect width="100" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#7f5cff" stroke-opacity="0.5"/><text x="50.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#b8a5ff" text-anchor="middle" letter-spacing="1">Industry</text></g>
+    <g transform="translate(584 40)"><rect width="60" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#7f5cff" stroke-opacity="0.5"/><text x="30.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#b8a5ff" text-anchor="middle" letter-spacing="1">CASE</text></g>
 </svg></div>
-    <p>本日抓取到 1 条相关素材。</p>
+    <p>腾讯云数字孪生电力应用，从3D大屏到智能电网的指南</p>
     <div class="sources">
       <div class="src-label">SOURCES · 信源</div>
       <ul>
-          <li><a href="https://www.yellowfinbi.com/blog/key-dashboard-design-principles-analytics-best-practice" target="_blank" rel="noopener">10 Dashboard Design Principles for Better BI Dashboards</a><div class="snippet"></div></li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="item" id="slot-07">
-    <div class="item-head">
-      <div class="item-num">07</div>
-      <div class="item-head-body">
-        <h3>AIGC 交互与 Prompt 界面</h3>
-        <div class="item-en">AIGC Interaction &amp; Prompt UI</div>
-        <div class="badges">
-          <span class="badge purple">AIGC</span>
-          <span class="badge green">UX</span>
-        </div>
-      </div>
-    </div>
-    <div class="visual visual-svg"><svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AIGC 交互与 Prompt 界面">
-  <defs>
-    <linearGradient id="g07" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#100628"/>
-      <stop offset="100%" stop-color="#03060f"/>
-    </linearGradient>
-    <radialGradient id="rg07" cx="18%" cy="20%" r="70%">
-      <stop offset="0%" stop-color="#a56dff" stop-opacity="0.45"/>
-      <stop offset="100%" stop-color="#a56dff" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="rg07b" cx="90%" cy="90%" r="60%">
-      <stop offset="0%" stop-color="#c9a5ff" stop-opacity="0.22"/>
-      <stop offset="100%" stop-color="#c9a5ff" stop-opacity="0"/>
-    </radialGradient>
-    <pattern id="grid07" width="32" height="32" patternUnits="userSpaceOnUse">
-      <path d="M32 0H0V32" fill="none" stroke="#a56dff" stroke-opacity="0.07" stroke-width="1"/>
-    </pattern>
-  </defs>
-  <rect width="800" height="450" fill="url(#g07)"/>
-  <rect width="800" height="450" fill="url(#grid07)"/>
-  <rect width="800" height="450" fill="url(#rg07)"/>
-  <rect width="800" height="450" fill="url(#rg07b)"/>
-  <rect x="0" y="0" width="4" height="450" fill="#a56dff"/>
-  <text x="40" y="405" font-family="JetBrains Mono, Consolas, monospace" font-size="260" font-weight="800" fill="#a56dff" opacity="0.14" letter-spacing="-6">07</text>
-  <text x="40" y="90" font-family="JetBrains Mono, Consolas, monospace" font-size="12" letter-spacing="4" fill="#a56dff" opacity="0.85">SLOT · 07</text>
-  <text x="40" y="150" font-family="'PingFang SC','Microsoft YaHei','Segoe UI',system-ui,sans-serif" font-size="40" font-weight="700" fill="#ffffff">AIGC 交互与 Prompt 界面</text>
-  <text x="40" y="184" font-family="JetBrains Mono, Consolas, monospace" font-size="14" fill="#d7e3f4" opacity="0.72">AIGC Interaction &amp; Prompt UI</text>
-  <g transform="translate(704 40)"><rect width="48" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#a56dff" stroke-opacity="0.5"/><text x="24.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#c9a5ff" text-anchor="middle" letter-spacing="1">UX</text></g>
-    <g transform="translate(636 40)"><rect width="60" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#a56dff" stroke-opacity="0.5"/><text x="30.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#c9a5ff" text-anchor="middle" letter-spacing="1">AIGC</text></g>
-</svg></div>
-    <p>本日抓取到 2 条相关素材。</p>
-    <div class="sources">
-      <div class="src-label">SOURCES · 信源</div>
-      <ul>
-          <li><a href="https://www.ncss.cn/ncss/jydt/jy/202401/20240122/2293249866.html" target="_blank" rel="noopener">提问AI,专业的?</a><div class="snippet"></div></li>
-          <li><a href="https://blog.csdn.net/zsjdxc251/article/details/153634742" target="_blank" rel="noopener">大模型应用技术之Prompt Engineering(提示词工程)_《prompt engineering f...</a><div class="snippet"></div></li>
+          <li><a href="https://cloud.tencent.com/developer/article/2684363" target="_blank" rel="noopener">数字孪生电力落地指南:从3D大屏到&quot;会思考&quot;的电网-腾讯云开发者...</a><div class="src-meta"><span class="rel">相关 10/10</span><span class="cred cred-hi">可信 · 高</span><span class="host">cloud.tencent.com</span></div><div class="snippet">腾讯云数字孪生电力应用，从3D大屏到智能电网的指南</div></li>
+          <li><a href="https://cloud.tencent.com/developer/article/2527195" target="_blank" rel="noopener">【愚公系列】《工业数字孪生与企业应用实践》026-案例:数字孪生...</a><div class="src-meta"><span class="rel">相关 9/10</span><span class="cred cred-hi">可信 · 高</span><span class="host">cloud.tencent.com</span></div><div class="snippet">腾讯云自研数字孪生平台，提供大屏模板与定制服务经验</div></li>
+          <li><a href="https://developer.nvidia.com/blog/tag/industrial-digitalization-digital-twin/" target="_blank" rel="noopener">Tag: Industrial Digitalization / Digital Twin | NVIDIA...</a><div class="src-meta"><span class="rel">相关 7/10</span><span class="cred cred-hi">可信 · 高</span><span class="host">developer.nvidia.com</span></div><div class="snippet">NVIDIA开发者平台上的工业数字化与数字孪生标签页</div></li>
+          <li><a href="https://www.zhihu.com/pin/2022415584411821668" target="_blank" rel="noopener">...数字孪生AI工业智能体三维可视化大屏系统,赋能医药制造工厂...</a><div class="src-meta"><span class="rel">相关 6/10</span><span class="cred cred-mid">可信 · 中</span><span class="host">www.zhihu.com</span></div><div class="snippet">知乎上关于数字孪生AI工业智能体三维可视化大屏的讨论</div></li>
       </ul>
     </div>
   </section>
@@ -482,15 +318,15 @@
     <div class="item-head">
       <div class="item-num">08</div>
       <div class="item-head-body">
-        <h3>AIGC 视频与创意</h3>
-        <div class="item-en">AIGC Video &amp; Creative</div>
+        <h3>GIS × BIM × CIM 融合</h3>
+        <div class="item-en">GIS × BIM × CIM Fusion</div>
         <div class="badges">
-          <span class="badge purple">AIGC</span>
-          <span class="badge ">Video</span>
+          <span class="badge ">GIS</span>
+          <span class="badge ">BIM</span>
         </div>
       </div>
     </div>
-    <div class="visual visual-svg"><svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AIGC 视频与创意">
+    <div class="visual visual-svg"><svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="GIS × BIM × CIM 融合">
   <defs>
     <linearGradient id="g08" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#1a0a05"/>
@@ -515,17 +351,236 @@
   <rect x="0" y="0" width="4" height="450" fill="#ff7a5f"/>
   <text x="40" y="405" font-family="JetBrains Mono, Consolas, monospace" font-size="260" font-weight="800" fill="#ff7a5f" opacity="0.14" letter-spacing="-6">08</text>
   <text x="40" y="90" font-family="JetBrains Mono, Consolas, monospace" font-size="12" letter-spacing="4" fill="#ff7a5f" opacity="0.85">SLOT · 08</text>
-  <text x="40" y="150" font-family="'PingFang SC','Microsoft YaHei','Segoe UI',system-ui,sans-serif" font-size="40" font-weight="700" fill="#ffffff">AIGC 视频与创意</text>
-  <text x="40" y="184" font-family="JetBrains Mono, Consolas, monospace" font-size="14" fill="#d7e3f4" opacity="0.72">AIGC Video &amp; Creative</text>
-  <g transform="translate(682 40)"><rect width="70" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#ff7a5f" stroke-opacity="0.5"/><text x="35.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#ffb59f" text-anchor="middle" letter-spacing="1">Video</text></g>
-    <g transform="translate(614 40)"><rect width="60" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#ff7a5f" stroke-opacity="0.5"/><text x="30.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#ffb59f" text-anchor="middle" letter-spacing="1">AIGC</text></g>
+  <text x="40" y="150" font-family="'PingFang SC','Microsoft YaHei','Segoe UI',system-ui,sans-serif" font-size="40" font-weight="700" fill="#ffffff">GIS × BIM × CIM 融合</text>
+  <text x="40" y="184" font-family="JetBrains Mono, Consolas, monospace" font-size="14" fill="#d7e3f4" opacity="0.72">GIS × BIM × CIM Fusion</text>
+  <g transform="translate(702 40)"><rect width="50" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#ff7a5f" stroke-opacity="0.5"/><text x="25.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#ffb59f" text-anchor="middle" letter-spacing="1">BIM</text></g>
+    <g transform="translate(644 40)"><rect width="50" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#ff7a5f" stroke-opacity="0.5"/><text x="25.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#ffb59f" text-anchor="middle" letter-spacing="1">GIS</text></g>
 </svg></div>
-    <p>本日抓取到 2 条相关素材。</p>
+    <p>本影科技AirCIM智慧城市数字孪生平台介绍</p>
     <div class="sources">
       <div class="src-label">SOURCES · 信源</div>
       <ul>
-          <li><a href="https://blog.csdn.net/weixin_55154866/article/details/160563504" target="_blank" rel="noopener">2026年AI应用开发全攻略:超全生态地图+工具链解析!开发者/产品人/AI从业...</a><div class="snippet"></div></li>
-          <li><a href="https://blog.csdn.net/m0_69581581/article/details/163615487" target="_blank" rel="noopener"># AI视频生成2026:多模态控制与工程化落地的技术跃迁-CSDN博客</a><div class="snippet"></div></li>
+          <li><a href="http://www.vpgis.com/" target="_blank" rel="noopener">本影科技 · AirCIM - 智慧城市CIM平台 · 数字孪生平台</a><div class="src-meta"><span class="rel">相关 10/10</span><span class="cred cred-mid">可信 · 中</span><span class="host">www.vpgis.com</span></div><div class="snippet">本影科技AirCIM智慧城市数字孪生平台介绍</div></li>
+          <li><a href="https://www.supermap.com/zh-cn/a/news/65_4404.html" target="_blank" rel="noopener">...共筑数字孪生城市新蓝图-SuperMap|超图软件-GIS-地理信息系统...</a><div class="src-meta"><span class="rel">相关 9/10</span><span class="cred cred-hi">可信 · 高</span><span class="host">www.supermap.com</span></div><div class="snippet">超图软件数字孪生城市案例助力GIS工具应用实践</div></li>
+          <li><a href="http://zfcxjst.gd.gov.cn/zwzt/jskjcx/kjdt/content/post_4781384.html" target="_blank" rel="noopener">广东第二批智能建造成果巡展① | 自主可控数字化设计筑牢智慧建造...</a><div class="src-meta"><span class="rel">相关 7/10</span><span class="cred cred-mid">可信 · 中</span><span class="host">zfcxjst.gd.gov.cn</span></div><div class="snippet">广东智能建造成果巡展，展示智慧建造的数字化设计</div></li>
+          <li><a href="https://cloud.tencent.com/developer/article/2724299" target="_blank" rel="noopener">2026年变电站数字孪生开发解决方案-建设篇-三维建模、数据接入与...</a><div class="src-meta"><span class="rel">相关 6/10</span><span class="cred cred-hi">可信 · 高</span><span class="host">cloud.tencent.com</span></div><div class="snippet">腾讯云变电站数字孪生开发的三维建模与数据接入方案</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="item" id="slot-07">
+    <div class="item-head">
+      <div class="item-num">07</div>
+      <div class="item-head-body">
+        <h3>数据可视化与叙事</h3>
+        <div class="item-en">Data Visualization &amp; Storytelling</div>
+        <div class="badges">
+          <span class="badge ">DATAVIZ</span>
+          <span class="badge ">Story</span>
+        </div>
+      </div>
+    </div>
+    <div class="visual visual-svg"><svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="数据可视化与叙事">
+  <defs>
+    <linearGradient id="g07" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#100628"/>
+      <stop offset="100%" stop-color="#03060f"/>
+    </linearGradient>
+    <radialGradient id="rg07" cx="18%" cy="20%" r="70%">
+      <stop offset="0%" stop-color="#a56dff" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#a56dff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="rg07b" cx="90%" cy="90%" r="60%">
+      <stop offset="0%" stop-color="#c9a5ff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#c9a5ff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid07" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#a56dff" stroke-opacity="0.07" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="450" fill="url(#g07)"/>
+  <rect width="800" height="450" fill="url(#grid07)"/>
+  <rect width="800" height="450" fill="url(#rg07)"/>
+  <rect width="800" height="450" fill="url(#rg07b)"/>
+  <rect x="0" y="0" width="4" height="450" fill="#a56dff"/>
+  <text x="40" y="405" font-family="JetBrains Mono, Consolas, monospace" font-size="260" font-weight="800" fill="#a56dff" opacity="0.14" letter-spacing="-6">07</text>
+  <text x="40" y="90" font-family="JetBrains Mono, Consolas, monospace" font-size="12" letter-spacing="4" fill="#a56dff" opacity="0.85">SLOT · 07</text>
+  <text x="40" y="150" font-family="'PingFang SC','Microsoft YaHei','Segoe UI',system-ui,sans-serif" font-size="40" font-weight="700" fill="#ffffff">数据可视化与叙事</text>
+  <text x="40" y="184" font-family="JetBrains Mono, Consolas, monospace" font-size="14" fill="#d7e3f4" opacity="0.72">Data Visualization &amp; Storytelling</text>
+  <g transform="translate(682 40)"><rect width="70" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#a56dff" stroke-opacity="0.5"/><text x="35.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#c9a5ff" text-anchor="middle" letter-spacing="1">Story</text></g>
+    <g transform="translate(584 40)"><rect width="90" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#a56dff" stroke-opacity="0.5"/><text x="45.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#c9a5ff" text-anchor="middle" letter-spacing="1">DATAVIZ</text></g>
+</svg></div>
+    <p>微信工作坊招募，3天快速掌握数据可视化叙事技巧。</p>
+    <div class="sources">
+      <div class="src-label">SOURCES · 信源</div>
+      <ul>
+          <li><a href="https://mp.weixin.qq.com/s?__biz=MjM5MzE3Nzg5MQ==&amp;amp;mid=2651661417&amp;amp;idx=1&amp;amp;sn=1a23bb1df53e286247d01a01ec06db82&amp;amp;chksm=bc98d26ca4904d7a128d320e9c27e32f04b5e2b4101285c4aadfadd54a2498a62efbd7a184e0&amp;amp;scene=27" target="_blank" rel="noopener">...说话》工作坊招募|你的第一张“数据名片”:3天构建可视化叙事力</a><div class="src-meta"><span class="rel">相关 9/10</span><span class="cred cred-mid">可信 · 中</span><span class="host">mp.weixin.qq.com</span></div><div class="snippet">微信工作坊招募，3天快速掌握数据可视化叙事技巧。</div></li>
+          <li><a href="https://www.sps.nyu.edu/courses/DATA1-CE9002-the-art-of-data-visualization.html" target="_blank" rel="noopener">The Art of Data Visualization | NYU SPS</a><div class="src-meta"><span class="rel">相关 8/10</span><span class="cred cred-hi">可信 · 高</span><span class="host">www.sps.nyu.edu</span></div><div class="snippet">NYU SPS课程，探讨数据可视化艺术。</div></li>
+          <li><a href="https://zhuanlan.zhihu.com/p/326448747" target="_blank" rel="noopener">经典案例库|数据新闻案例集合大放送! - 知乎</a><div class="src-meta"><span class="rel">相关 7/10</span><span class="cred cred-mid">可信 · 中</span><span class="host">zhuanlan.zhihu.com</span></div><div class="snippet">知乎专栏提供数据新闻案例集合，助力设计灵感获取。</div></li>
+          <li><a href="https://mp.weixin.qq.com/s?__biz=MzU2NzQ2ODAzMA==&amp;amp;mid=2247506106&amp;amp;idx=1&amp;amp;sn=320009889142cfd92c5f38455892fba7&amp;amp;chksm=fc9e522bcbe9db3dab4fd661bafa4f5185196fc8ad9563ce8182d76666bb4a02aa4dedeae84b&amp;amp;scene=27" target="_blank" rel="noopener">案例分享 | 信息可视化设计</a><div class="src-meta"><span class="rel">相关 7/10</span><span class="cred cred-mid">可信 · 中</span><span class="host">mp.weixin.qq.com</span></div><div class="snippet">微信案例分享，聚焦信息可视化设计实践。</div></li>
+      </ul>
+    </div>
+  </section>
+
+<div class="section-title warm">▍ 近期热点<span class="sub">Recent · Signals</span></div>
+  <section class="item" id="slot-06">
+    <div class="item-head">
+      <div class="item-num">06</div>
+      <div class="item-head-body">
+        <h3>AIGC 3D 生成与建模</h3>
+        <div class="item-en">AIGC 3D Generation &amp; Modeling</div>
+        <div class="badges">
+          <span class="badge purple">AIGC</span>
+          <span class="badge purple">3D</span>
+        </div>
+      </div>
+    </div>
+    <div class="visual visual-svg"><svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AIGC 3D 生成与建模">
+  <defs>
+    <linearGradient id="g06" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#001818"/>
+      <stop offset="100%" stop-color="#03060f"/>
+    </linearGradient>
+    <radialGradient id="rg06" cx="18%" cy="20%" r="70%">
+      <stop offset="0%" stop-color="#4dfff0" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#4dfff0" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="rg06b" cx="90%" cy="90%" r="60%">
+      <stop offset="0%" stop-color="#a5fff5" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#a5fff5" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid06" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#4dfff0" stroke-opacity="0.07" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="450" fill="url(#g06)"/>
+  <rect width="800" height="450" fill="url(#grid06)"/>
+  <rect width="800" height="450" fill="url(#rg06)"/>
+  <rect width="800" height="450" fill="url(#rg06b)"/>
+  <rect x="0" y="0" width="4" height="450" fill="#4dfff0"/>
+  <text x="40" y="405" font-family="JetBrains Mono, Consolas, monospace" font-size="260" font-weight="800" fill="#4dfff0" opacity="0.14" letter-spacing="-6">06</text>
+  <text x="40" y="90" font-family="JetBrains Mono, Consolas, monospace" font-size="12" letter-spacing="4" fill="#4dfff0" opacity="0.85">SLOT · 06</text>
+  <text x="40" y="150" font-family="'PingFang SC','Microsoft YaHei','Segoe UI',system-ui,sans-serif" font-size="40" font-weight="700" fill="#ffffff">AIGC 3D 生成与建模</text>
+  <text x="40" y="184" font-family="JetBrains Mono, Consolas, monospace" font-size="14" fill="#d7e3f4" opacity="0.72">AIGC 3D Generation &amp; Modeling</text>
+  <g transform="translate(704 40)"><rect width="48" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#4dfff0" stroke-opacity="0.5"/><text x="24.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#a5fff5" text-anchor="middle" letter-spacing="1">3D</text></g>
+    <g transform="translate(636 40)"><rect width="60" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#4dfff0" stroke-opacity="0.5"/><text x="30.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#a5fff5" text-anchor="middle" letter-spacing="1">AIGC</text></g>
+</svg></div>
+    <p>AgentForge内容生成全链路，含AIGC模型与Unity场景应用</p>
+    <div class="sources">
+      <div class="src-label">SOURCES · 信源</div>
+      <ul>
+          <li><a href="https://zhuanlan.zhihu.com/p/2047886273671701135" target="_blank" rel="noopener">AgentForge 内容生成全链路:从模型 AIGC 横向对比到 Unity 完整场景...</a><div class="src-meta"><span class="rel">相关 9/10</span><span class="cred cred-mid">可信 · 中</span><span class="host">zhuanlan.zhihu.com</span></div><div class="snippet">AgentForge内容生成全链路，含AIGC模型与Unity场景应用</div></li>
+          <li><a href="https://www.cnblogs.com/cimpro/articles/19812970" target="_blank" rel="noopener">2026年3D可视化,就用AIGC模型+0代码开发 - CIMPro孪大师 - 博客园</a><div class="src-meta"><span class="rel">相关 8/10</span><span class="cred cred-mid">可信 · 中</span><span class="host">www.cnblogs.com</span></div><div class="snippet">2026年3D可视化结合AIGC模型与0代码开发工具介绍</div></li>
+          <li><a href="https://drfone.wondershare.com/ai-tools/ai-3d-model-generator.html" target="_blank" rel="noopener">Unlocking the Potential of AI 3D Model Generators in 2026- Dr...</a><div class="src-meta"><span class="rel">相关 8/10</span><span class="cred cred-mid">可信 · 中</span><span class="host">drfone.wondershare.com</span></div><div class="snippet">2026年AI 3D模型生成器的潜力与应用探讨</div></li>
+          <li><a href="https://ss.cs.tsinghua.edu.cn/content.html" target="_blank" rel="noopener">Tsinghua University Generative AI 2026 Summer School</a><div class="src-meta"><span class="rel">相关 5/10</span><span class="cred cred-hi">可信 · 高</span><span class="host">ss.cs.tsinghua.edu.cn</span></div><div class="snippet">清华大学2026生成式AI暑期学校信息</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="item" id="slot-05">
+    <div class="item-head">
+      <div class="item-num">05</div>
+      <div class="item-head-body">
+        <h3>空间计算与 XR 交互</h3>
+        <div class="item-en">Spatial Computing &amp; XR</div>
+        <div class="badges">
+          <span class="badge purple">XR</span>
+          <span class="badge ">Spatial</span>
+        </div>
+      </div>
+    </div>
+    <div class="visual visual-svg"><svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="空间计算与 XR 交互">
+  <defs>
+    <linearGradient id="g05" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a0f00"/>
+      <stop offset="100%" stop-color="#03060f"/>
+    </linearGradient>
+    <radialGradient id="rg05" cx="18%" cy="20%" r="70%">
+      <stop offset="0%" stop-color="#ffb547" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#ffb547" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="rg05b" cx="90%" cy="90%" r="60%">
+      <stop offset="0%" stop-color="#ffd08a" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ffd08a" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid05" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#ffb547" stroke-opacity="0.07" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="450" fill="url(#g05)"/>
+  <rect width="800" height="450" fill="url(#grid05)"/>
+  <rect width="800" height="450" fill="url(#rg05)"/>
+  <rect width="800" height="450" fill="url(#rg05b)"/>
+  <rect x="0" y="0" width="4" height="450" fill="#ffb547"/>
+  <text x="40" y="405" font-family="JetBrains Mono, Consolas, monospace" font-size="260" font-weight="800" fill="#ffb547" opacity="0.14" letter-spacing="-6">05</text>
+  <text x="40" y="90" font-family="JetBrains Mono, Consolas, monospace" font-size="12" letter-spacing="4" fill="#ffb547" opacity="0.85">SLOT · 05</text>
+  <text x="40" y="150" font-family="'PingFang SC','Microsoft YaHei','Segoe UI',system-ui,sans-serif" font-size="40" font-weight="700" fill="#ffffff">空间计算与 XR 交互</text>
+  <text x="40" y="184" font-family="JetBrains Mono, Consolas, monospace" font-size="14" fill="#d7e3f4" opacity="0.72">Spatial Computing &amp; XR</text>
+  <g transform="translate(662 40)"><rect width="90" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#ffb547" stroke-opacity="0.5"/><text x="45.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#ffd08a" text-anchor="middle" letter-spacing="1">Spatial</text></g>
+    <g transform="translate(606 40)"><rect width="48" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#ffb547" stroke-opacity="0.5"/><text x="24.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#ffd08a" text-anchor="middle" letter-spacing="1">XR</text></g>
+</svg></div>
+    <p>学习为Apple Vision Pro设计UI界面的实战经验</p>
+    <div class="sources">
+      <div class="src-label">SOURCES · 信源</div>
+      <ul>
+          <li><a href="https://www.uisdc.com/vision-pro-6" target="_blank" rel="noopener">实战案例!如何从0到1为Apple Vision Pro设计UI界面? - 优设网 - 学AI...</a><div class="src-meta"><span class="rel">相关 9/10</span><span class="cred cred-mid">可信 · 中</span><span class="host">www.uisdc.com</span></div><div class="snippet">学习为Apple Vision Pro设计UI界面的实战经验</div></li>
+          <li><a href="https://pixso.cn/designskills/space-design-of-apple-vision-pro/" target="_blank" rel="noopener">设计探索!深入解读Apple Vision Pro的空间设计</a><div class="src-meta"><span class="rel">相关 9/10</span><span class="cred cred-mid">可信 · 中</span><span class="host">pixso.cn</span></div><div class="snippet">深入解读Apple Vision Pro的空间设计理念</div></li>
+          <li><a href="https://www.apple.com/cn/apple-vision-pro/" target="_blank" rel="noopener">Apple Vision Pro - Apple (中国大陆)</a><div class="src-meta"><span class="rel">相关 8/10</span><span class="cred cred-hi">可信 · 高</span><span class="host">www.apple.com</span></div><div class="snippet">了解Apple Vision Pro官方信息与特性</div></li>
+          <li><a href="https://xie.infoq.cn/article/df30ac9b9a47b99bc362bd351" target="_blank" rel="noopener">产品设计案例_执于业务_InfoQ写作社区</a><div class="src-meta"><span class="rel">相关 3/10</span><span class="cred cred-mid">可信 · 中</span><span class="host">xie.infoq.cn</span></div><div class="snippet">InfoQ社区产品设计案例，内容不详</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="item" id="slot-03">
+    <div class="item-head">
+      <div class="item-num">03</div>
+      <div class="item-head-body">
+        <h3>大屏视觉语言与信息层级</h3>
+        <div class="item-en">Dashboard Visual Language &amp; Hierarchy</div>
+        <div class="badges">
+          <span class="badge ">DESIGN</span>
+          <span class="badge ">Dashboard</span>
+        </div>
+      </div>
+    </div>
+    <div class="visual visual-svg"><svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="大屏视觉语言与信息层级">
+  <defs>
+    <linearGradient id="g03" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#031a15"/>
+      <stop offset="100%" stop-color="#03060f"/>
+    </linearGradient>
+    <radialGradient id="rg03" cx="18%" cy="20%" r="70%">
+      <stop offset="0%" stop-color="#29ffb6" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#29ffb6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="rg03b" cx="90%" cy="90%" r="60%">
+      <stop offset="0%" stop-color="#7fffce" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#7fffce" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid03" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#29ffb6" stroke-opacity="0.07" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="450" fill="url(#g03)"/>
+  <rect width="800" height="450" fill="url(#grid03)"/>
+  <rect width="800" height="450" fill="url(#rg03)"/>
+  <rect width="800" height="450" fill="url(#rg03b)"/>
+  <rect x="0" y="0" width="4" height="450" fill="#29ffb6"/>
+  <text x="40" y="405" font-family="JetBrains Mono, Consolas, monospace" font-size="260" font-weight="800" fill="#29ffb6" opacity="0.14" letter-spacing="-6">03</text>
+  <text x="40" y="90" font-family="JetBrains Mono, Consolas, monospace" font-size="12" letter-spacing="4" fill="#29ffb6" opacity="0.85">SLOT · 03</text>
+  <text x="40" y="150" font-family="'PingFang SC','Microsoft YaHei','Segoe UI',system-ui,sans-serif" font-size="40" font-weight="700" fill="#ffffff">大屏视觉语言与信息层级</text>
+  <text x="40" y="184" font-family="JetBrains Mono, Consolas, monospace" font-size="14" fill="#d7e3f4" opacity="0.72">Dashboard Visual Language &amp; Hierarchy</text>
+  <g transform="translate(642 40)"><rect width="110" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#29ffb6" stroke-opacity="0.5"/><text x="55.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#7fffce" text-anchor="middle" letter-spacing="1">Dashboard</text></g>
+    <g transform="translate(554 40)"><rect width="80" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#29ffb6" stroke-opacity="0.5"/><text x="40.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#7fffce" text-anchor="middle" letter-spacing="1">DESIGN</text></g>
+</svg></div>
+    <p>提供2026年最佳仪表盘设计案例，启发设计思路。</p>
+    <div class="sources">
+      <div class="src-label">SOURCES · 信源</div>
+      <ul>
+          <li><a href="https://muz.li/blog/best-dashboard-design-examples-inspirations-for-2026/" target="_blank" rel="noopener">50 Best Dashboard Design Examples for 2026 | Muzli Blog</a><div class="src-meta"><span class="rel">相关 8/10</span><span class="cred cred-mid">可信 · 中</span><span class="host">muz.li</span></div><div class="snippet">提供2026年最佳仪表盘设计案例，启发设计思路。</div></li>
+          <li><a href="https://www.fanruan.com/blog/article/1774674/" target="_blank" rel="noopener">大屏UI设计如何符合人机交互规范? | 帆软数字化转型知识库</a><div class="src-meta"><span class="rel">相关 7/10</span><span class="cred cred-hi">可信 · 高</span><span class="host">www.fanruan.com</span></div><div class="snippet">探讨大屏UI设计的人机交互规范，助力设计优化。</div></li>
+          <li><a href="https://www.coursera.org/articles/power-bi-dashboard-examples" target="_blank" rel="noopener">Power BI Dashboard Examples: Inspiration for Data-Driven...</a><div class="src-meta"><span class="rel">相关 7/10</span><span class="cred cred-hi">可信 · 高</span><span class="host">www.coursera.org</span></div><div class="snippet">Power BI仪表盘案例，为数据驱动设计提供灵感。</div></li>
+          <li><a href="https://www.uxpin.com/studio/blog/ui-design-principles/" target="_blank" rel="noopener">...UI Design Principles Every Designer Should Follow (2026) |...</a><div class="src-meta"><span class="rel">相关 6/10</span><span class="cred cred-hi">可信 · 高</span><span class="host">www.uxpin.com</span></div><div class="snippet">介绍UI设计原则，对设计师有指导意义。</div></li>
       </ul>
     </div>
   </section>
@@ -534,15 +589,15 @@
     <div class="item-head">
       <div class="item-num">09</div>
       <div class="item-head-body">
-        <h3>组件生态与低代码</h3>
-        <div class="item-en">Component Ecosystem</div>
+        <h3>交互动效与微交互</h3>
+        <div class="item-en">Motion &amp; Micro-Interaction</div>
         <div class="badges">
-          <span class="badge ">TOOL</span>
-          <span class="badge green">Low-Code</span>
+          <span class="badge ">MOTION</span>
+          <span class="badge green">UX</span>
         </div>
       </div>
     </div>
-    <div class="visual visual-svg"><svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="组件生态与低代码">
+    <div class="visual visual-svg"><svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="交互动效与微交互">
   <defs>
     <linearGradient id="g09" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#02180f"/>
@@ -567,16 +622,19 @@
   <rect x="0" y="0" width="4" height="450" fill="#5cffb0"/>
   <text x="40" y="405" font-family="JetBrains Mono, Consolas, monospace" font-size="260" font-weight="800" fill="#5cffb0" opacity="0.14" letter-spacing="-6">09</text>
   <text x="40" y="90" font-family="JetBrains Mono, Consolas, monospace" font-size="12" letter-spacing="4" fill="#5cffb0" opacity="0.85">SLOT · 09</text>
-  <text x="40" y="150" font-family="'PingFang SC','Microsoft YaHei','Segoe UI',system-ui,sans-serif" font-size="40" font-weight="700" fill="#ffffff">组件生态与低代码</text>
-  <text x="40" y="184" font-family="JetBrains Mono, Consolas, monospace" font-size="14" fill="#d7e3f4" opacity="0.72">Component Ecosystem</text>
-  <g transform="translate(652 40)"><rect width="100" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#5cffb0" stroke-opacity="0.5"/><text x="50.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#a5ffcf" text-anchor="middle" letter-spacing="1">Low-Code</text></g>
-    <g transform="translate(584 40)"><rect width="60" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#5cffb0" stroke-opacity="0.5"/><text x="30.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#a5ffcf" text-anchor="middle" letter-spacing="1">TOOL</text></g>
+  <text x="40" y="150" font-family="'PingFang SC','Microsoft YaHei','Segoe UI',system-ui,sans-serif" font-size="40" font-weight="700" fill="#ffffff">交互动效与微交互</text>
+  <text x="40" y="184" font-family="JetBrains Mono, Consolas, monospace" font-size="14" fill="#d7e3f4" opacity="0.72">Motion &amp; Micro-Interaction</text>
+  <g transform="translate(704 40)"><rect width="48" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#5cffb0" stroke-opacity="0.5"/><text x="24.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#a5ffcf" text-anchor="middle" letter-spacing="1">UX</text></g>
+    <g transform="translate(616 40)"><rect width="80" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#5cffb0" stroke-opacity="0.5"/><text x="40.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#a5ffcf" text-anchor="middle" letter-spacing="1">MOTION</text></g>
 </svg></div>
-    <p>今日未抓到有效素材，展示主题槽的默认视觉。</p>
+    <p>优设网分享2024年动效设计趋势与案例</p>
     <div class="sources">
       <div class="src-label">SOURCES · 信源</div>
       <ul>
-          <li>暂无信源。</li>
+          <li><a href="https://www.uisdc.com/2024-motion-design" target="_blank" rel="noopener">超多案例!5个值得关注的2024年动效设计趋势 - 优设网 - 学AI设计...</a><div class="src-meta"><span class="rel">相关 9/10</span><span class="cred cred-hi">可信 · 高</span><span class="host">www.uisdc.com</span></div><div class="snippet">优设网分享2024年动效设计趋势与案例</div></li>
+          <li><a href="https://cloud.tencent.com/developer/article/2582124" target="_blank" rel="noopener">数据大屏交互设计案例详解 | 基于smardaten实现智慧交通监测大屏...</a><div class="src-meta"><span class="rel">相关 6/10</span><span class="cred cred-hi">可信 · 高</span><span class="host">cloud.tencent.com</span></div><div class="snippet">腾讯云案例详解智慧交通数据大屏交互设计</div></li>
+          <li><a href="https://adminlte.io/blog/free-dashboard-templates/" target="_blank" rel="noopener">34 Best Free &amp; Premium Dashboard Templates (2026)</a><div class="src-meta"><span class="rel">相关 3/10</span><span class="cred cred-mid">可信 · 中</span><span class="host">adminlte.io</span></div><div class="snippet">AdminLTE提供仪表盘模板资源</div></li>
+          <li><a href="https://shaqstudio.com/" target="_blank" rel="noopener">ShaqStudio — Digital Design &amp; Development Studio</a><div class="src-meta"><span class="rel">相关 2/10</span><span class="cred cred-mid">可信 · 中</span><span class="host">shaqstudio.com</span></div><div class="snippet">ShaqStudio数字设计与开发工作室介绍</div></li>
       </ul>
     </div>
   </section>
@@ -585,15 +643,15 @@
     <div class="item-head">
       <div class="item-num">10</div>
       <div class="item-head-body">
-        <h3>性能底盘与工程实现</h3>
-        <div class="item-en">Performance &amp; Engineering</div>
+        <h3>行业动态与标准</h3>
+        <div class="item-en">Industry News &amp; Standards</div>
         <div class="badges">
-          <span class="badge ">TECH</span>
-          <span class="badge ">Perf</span>
+          <span class="badge ">NEWS</span>
+          <span class="badge purple">Industry</span>
         </div>
       </div>
     </div>
-    <div class="visual visual-svg"><svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="性能底盘与工程实现">
+    <div class="visual visual-svg"><svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="行业动态与标准">
   <defs>
     <linearGradient id="g10" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#050e28"/>
@@ -618,25 +676,29 @@
   <rect x="0" y="0" width="4" height="450" fill="#5a9dff"/>
   <text x="40" y="405" font-family="JetBrains Mono, Consolas, monospace" font-size="260" font-weight="800" fill="#5a9dff" opacity="0.14" letter-spacing="-6">10</text>
   <text x="40" y="90" font-family="JetBrains Mono, Consolas, monospace" font-size="12" letter-spacing="4" fill="#5a9dff" opacity="0.85">SLOT · 10</text>
-  <text x="40" y="150" font-family="'PingFang SC','Microsoft YaHei','Segoe UI',system-ui,sans-serif" font-size="40" font-weight="700" fill="#ffffff">性能底盘与工程实现</text>
-  <text x="40" y="184" font-family="JetBrains Mono, Consolas, monospace" font-size="14" fill="#d7e3f4" opacity="0.72">Performance &amp; Engineering</text>
-  <g transform="translate(692 40)"><rect width="60" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#5a9dff" stroke-opacity="0.5"/><text x="30.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#a0c5ff" text-anchor="middle" letter-spacing="1">Perf</text></g>
-    <g transform="translate(624 40)"><rect width="60" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#5a9dff" stroke-opacity="0.5"/><text x="30.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#a0c5ff" text-anchor="middle" letter-spacing="1">TECH</text></g>
+  <text x="40" y="150" font-family="'PingFang SC','Microsoft YaHei','Segoe UI',system-ui,sans-serif" font-size="40" font-weight="700" fill="#ffffff">行业动态与标准</text>
+  <text x="40" y="184" font-family="JetBrains Mono, Consolas, monospace" font-size="14" fill="#d7e3f4" opacity="0.72">Industry News &amp; Standards</text>
+  <g transform="translate(652 40)"><rect width="100" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#5a9dff" stroke-opacity="0.5"/><text x="50.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#a0c5ff" text-anchor="middle" letter-spacing="1">Industry</text></g>
+    <g transform="translate(584 40)"><rect width="60" height="24" rx="4" ry="4" fill="rgba(255,255,255,0.06)" stroke="#5a9dff" stroke-opacity="0.5"/><text x="30.0" y="16" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#a0c5ff" text-anchor="middle" letter-spacing="1">NEWS</text></g>
 </svg></div>
-    <p>本日抓取到 1 条相关素材。</p>
+    <p>测试实车双向映射数字孪生系统采购中标信息</p>
     <div class="sources">
       <div class="src-label">SOURCES · 信源</div>
       <ul>
-          <li><a href="https://bigdata.evget.com/post/25037.html" target="_blank" rel="noopener">超大三维模型如何实现3D WEB轻量化渲染? | 慧都智能制造</a><div class="snippet"></div></li>
+          <li><a href="https://xxgk.tongji.edu.cn/index.php?classid=4579&amp;amp;newsid=16648&amp;amp;t=show" target="_blank" rel="noopener">...测试实车双向映射数字孪生系统)公开招标采购项目中标公告...</a><div class="src-meta"><span class="rel">相关 5/10</span><span class="cred cred-mid">可信 · 中</span><span class="host">xxgk.tongji.edu.cn</span></div><div class="snippet">测试实车双向映射数字孪生系统采购中标信息</div></li>
+          <li><a href="https://ggzy.guizhou.gov.cn/hallweb/hall/attach/nosession/download?attachId=8a8bb7d590a6a9ab0190a6df291b0031" target="_blank" rel="noopener">数字孪生智慧校园平台项目的中标(成交)结果公告</a><div class="src-meta"><span class="rel">相关 5/10</span><span class="cred cred-hi">可信 · 高</span><span class="host">ggzy.guizhou.gov.cn</span></div><div class="snippet">数字孪生智慧校园平台项目中标结果公告</div></li>
+          <li><a href="http://www.ccgp.gov.cn/cggg/dfgg/zbgg/202607/t20260715_26935518.htm" target="_blank" rel="noopener">河北经济管理学校基于AI与数字孪生的智慧实训平台公开招标中标公告</a><div class="src-meta"><span class="rel">相关 4/10</span><span class="cred cred-hi">可信 · 高</span><span class="host">www.ccgp.gov.cn</span></div><div class="snippet">河北经济管理学校智慧实训平台招标中标信息</div></li>
+          <li><a href="http://www.ccgp.gov.cn/cggg/dfgg/zbgg/202604/t20260430_26507268.htm" target="_blank" rel="noopener">...工程学院数字孪生多轴数控实训室采购项目(二期)公开招标中标公告</a><div class="src-meta"><span class="rel">相关 4/10</span><span class="cred cred-hi">可信 · 高</span><span class="host">www.ccgp.gov.cn</span></div><div class="snippet">工程学院数字孪生多轴数控实训室采购中标公告</div></li>
       </ul>
     </div>
   </section>
 
 
-  <footer>
-    <div>▍ <span class="glow">DT · 3D · AIGC VISUAL DESIGN DAILY</span> ▍</div>
-    <div style="margin-top:6px;">Auto-generated on 2026-08-18 · auto-build-2026-08-18</div>
-  </footer>
+    <footer>
+      <div>▍ <span class="glow">DT · 3D · AIGC VISUAL DESIGN DAILY</span> ▍</div>
+      <div style="margin-top:6px;">Auto-generated on 2026-08-18 · auto-build-2026-08-18</div>
+    </footer>
+  </main>
 </div>
 </body>
 </html>
